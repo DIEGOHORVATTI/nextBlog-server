@@ -90,8 +90,18 @@ const createModarator = async (payload: any) => {
 const createSubscriber = async (payload: any) => {
   const { password, ...subscriber } = payload;
 
+  const isExist = await prisma.user.findUnique({
+    where:{
+      email:subscriber.email
+    }
+  })
+
+  if(isExist){
+    throw new HTTPError(httpStatus.BAD_REQUEST,'The email already register')
+  }
+
   const hashPassword = await hashedPassword(password);
-  console.log(hashPassword, subscriber);
+ 
 
   const result = await prisma.$transaction(async (transactionClient) => {
     const userCreate = await transactionClient.user.create({
@@ -130,12 +140,7 @@ const getAllUsersFromDb = async (
 
   const conditions: Prisma.UserWhereInput[] = [];
 
-  // filtering out the soft deleted users
-  // conditions.push({
-  //   status: UserStatus.ACTIVE,
-  // });
-
-  //@ searching
+ 
   if (q) {
     const searchConditions = userSearchableFields.map((field) => ({
       [field]: { contains: q, mode: "insensitive" },

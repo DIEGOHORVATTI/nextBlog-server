@@ -1,10 +1,9 @@
 import { Admin, Prisma, UserRole, UserStatus } from "@prisma/client";
 
 import prisma from "../../../shared/prismaClient";
-import { FileUploadHelper } from "../../../helpers/fileUploader";
-import { IUploadFile } from "../../interfaces/file";
+
 import { hashedPassword } from "./user.utils";
-import { Request } from "express";
+
 import { userSearchableFields } from "./user.constant";
 import { generatePaginateAndSortOptions } from "../../../helpers/paginationHelpers";
 import {
@@ -20,7 +19,7 @@ const createAdmin = async (payload: any) => {
 
   const hashPassword = await hashedPassword(password);
 
-  const result = await prisma.$transaction(async (transactionClient) => {
+  const result = await prisma.$transaction(async (transactionClient:any) => {
     const newUser = await transactionClient.user.create({
       data: {
         email: admin.email,
@@ -44,7 +43,7 @@ const createAuthor = async (payload: any) => {
 
   const hashPassword = await hashedPassword(password);
 
-  const result = await prisma.$transaction(async (transactionClient) => {
+  const result = await prisma.$transaction(async (transactionClient:any) => {
     const newUser = await transactionClient.user.create({
       data: {
         email: author.email,
@@ -68,7 +67,7 @@ const createModarator = async (payload: any) => {
 
   const hashPassword = await hashedPassword(password);
 
-  const result = await prisma.$transaction(async (transactionClient) => {
+  const result = await prisma.$transaction(async (transactionClient:any) => {
     await transactionClient.user.create({
       data: {
         email: modarator.email,
@@ -103,13 +102,14 @@ const createSubscriber = async (payload: any) => {
   const hashPassword = await hashedPassword(password);
  
 
-  const result = await prisma.$transaction(async (transactionClient) => {
+  const result = await prisma.$transaction(async (transactionClient:any) => {
     const userCreate = await transactionClient.user.create({
       data: {
         name: subscriber.name,
         email: subscriber.email,
         password: hashPassword,
         role: UserRole.SUBSCRIBER,
+        profilePhoto:subscriber.profilePhoto
       },
     });
 

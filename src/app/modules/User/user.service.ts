@@ -25,7 +25,8 @@ const createAdmin = async (payload: any) => {
         email: admin.email,
         password: hashPassword,
         role: UserRole.ADMIN,
-        name:admin.name
+        name:admin.name,
+        profilePhoto:admin.profilePhoto
       },
     });
     console.log({ newUser });
@@ -49,7 +50,8 @@ const createAuthor = async (payload: any) => {
         email: author.email,
         password: hashPassword,
         role: UserRole.BLOGGER,
-        name:author.name
+        name:author.name,
+        profilePhoto:author.profilePhoto
       },
     });
 
@@ -73,7 +75,8 @@ const createModarator = async (payload: any) => {
         email: modarator.email,
         password: hashPassword,
         role: UserRole.MODERATOR,
-        name:modarator.name
+        name:modarator.name,
+        profilePhoto:modarator.profilePhoto
       },
     });
 
@@ -194,7 +197,7 @@ const getMyProfile = async (authUser: any) => {
   });
 
   let profileData;
-  if (userData?.role === UserRole.ADMIN) {
+  if (userData?.role === UserRole.ADMIN || userData?.role === UserRole.SUPER_ADMIN) {
     profileData = await prisma.admin.findUnique({
       where: {
         email: userData.email,
@@ -224,10 +227,29 @@ const updateMyProfile = async (authUser: any, payload: any) => {
     },
   });
 
-  console.log(userData,payload)
+  if(payload.profilePhoto){
+    await prisma.user.update({
+      where:{
+        email:authUser.email
+      },
+      data:{
+        profilePhoto:payload.profilePhoto
+      }
+    })
+  }
+  if(payload.name){
+    await prisma.user.update({
+      where:{
+        email:authUser.email
+      },
+      data:{
+        name:payload.name
+      }
+    })
+  }
 
   let profileData;
-  if (userData?.role === UserRole.ADMIN) {
+  if (userData?.role === UserRole.ADMIN || userData?.role === UserRole.SUPER_ADMIN) {
     profileData = await prisma.admin.update({
       where: {
         email: userData.email,

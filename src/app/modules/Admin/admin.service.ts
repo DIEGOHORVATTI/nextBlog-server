@@ -79,13 +79,23 @@ const updateAdminIntoDB = async (
    id: string,
    data: Partial<Admin>
 ): Promise<Admin> => {
-   await prisma.admin.findUniqueOrThrow({
+   const adminData=await prisma.admin.findUniqueOrThrow({
       where: {
          id,
          isDeleted: false,
       },
    });
 
+    if(data.name){
+      await prisma.user.update({
+         where:{
+            email:adminData.email
+         },
+         data:{
+            name:data.name
+         }
+      })
+    }
    return await prisma.admin.update({
       where: {
          id,

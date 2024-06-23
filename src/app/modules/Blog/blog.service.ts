@@ -13,6 +13,8 @@ import {
 } from "../../interfaces/paginationSorting";
 import { generatePaginateAndSortOptions } from "../../../helpers/paginationHelpers";
 import { blogSearchableFields } from "./blog.constant";
+import { HTTPError } from "../../errors/HTTPError";
+import httpStatus from "http-status";
 
 const craeteBlogIntoDb = async (payload: Blog, user: any) => {
   console.log({ user });
@@ -321,31 +323,7 @@ const getMyAllBlogsFomDB = async (
   };
 };
 
-// const deleteBlogFromDB = async (id: string) => {
-//   await prisma.blog.findUniqueOrThrow({
-//     where: {
-//       id,
-//     },
-//   });
 
-//   const result = await prisma.$transaction(async (tx) => {
-//     const deleteBlog = await tx.blog.delete({
-//       where: {
-//         id,
-//       },
-
-//     });
-//     return deleteBlog
-//     await prisma.comment.deleteMany({
-//       where:{
-//         blogId:id
-//       }
-//     })
-//   });
-
-//   return result;
-
-// };
 
 const deleteBlogFromDB = async (id: string) => {
   // Use a Prisma transaction to ensure atomicity
@@ -403,6 +381,19 @@ const changeApprovalStatusDB = async (
       id,
     },
   });
+
+  const isCancel=await prisma.blog.findUnique({
+    where:{
+      id,
+      publishedStatus:Published_status.CANCEL
+    }
+  })
+
+  if(isCancel){
+    throw new HTTPError(httpStatus.BAD_REQUEST,'Can not updated its status is cancel')
+  }
+
+  console.log(isCancel)
 
   const result = await prisma.blog.update({
     where: {

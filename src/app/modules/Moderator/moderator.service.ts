@@ -86,6 +86,28 @@ const updateModeratorIntoDB = async (
        isDeleted: false,
      },
    });
+
+
+   if(data.name){
+    await prisma.user.update({
+       where:{
+          email:moderatorData.email
+       },
+       data:{
+          name:data.name
+       }
+    })
+ }
+ if(data.profilePhoto){
+    await prisma.user.update({
+       where:{
+          email:moderatorData.email
+       },
+       data:{
+          profilePhoto:data.profilePhoto
+       }
+    })
+ }
  
    const result = await prisma.$transaction(async (tx) => {
      const updatedModerator = await tx.moderator.update({

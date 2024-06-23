@@ -101,12 +101,36 @@ const updateAuthorIntoDB = async (
    id: string,
    data: Partial<Author>
  ): Promise<Author> => {
+
+  
+
    const authorData = await prisma.author.findUniqueOrThrow({
      where: {
        id,
        isDeleted: false,
      },
    });
+
+   if(data.name){
+      await prisma.user.update({
+         where:{
+            email:authorData.email
+         },
+         data:{
+            name:data.name
+         }
+      })
+   }
+   if(data.profilePhoto){
+      await prisma.user.update({
+         where:{
+            email:authorData.email
+         },
+         data:{
+            profilePhoto:data.profilePhoto
+         }
+      })
+   }
  
    const result = await prisma.$transaction(async (tx) => {
      const updatedModerator = await tx.author.update({
@@ -116,13 +140,14 @@ const updateAuthorIntoDB = async (
        data,
      });
  
-     if (data.profilePhoto) {
+     if (data.name) {
        await tx.user.update({
          where: {
            email: authorData.email,
          },
          data: {
-           profilePhoto: data.profilePhoto,
+         //   profilePhoto: data.profilePhoto,
+           name:updatedModerator.name
          },
        });
      }

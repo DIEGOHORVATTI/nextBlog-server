@@ -31,6 +31,7 @@ const getAdminDashboardMetadata = async () => {
   const blogCount = await prisma.blog.count();
   const bloggerCount = await prisma.author.count();
   const adminCount = await prisma.admin.count();
+  
 
   const commentCount = await prisma.comment.count();
   const likeCount = await prisma.like.count();
@@ -177,12 +178,8 @@ const getBloggerDashboardMetadata = async (user: VerifiedUser) => {
     blogCount,cancelBlogCount,approvedBlogCount,pendingBlogCount,commentCount,totalViews,barChartData, pieChartData
   };
 };
-
-
-
-
 const getBarChartData = async () => {
-  const appointmentCountByMonth: { month: Date; count: bigint }[] =
+  const appointmentCountByDay: { day: Date; count: bigint }[] =
     await prisma.$queryRaw`
         SELECT DATE_TRUNC('day', "createdAt") AS day,
                COUNT(*) AS count
@@ -191,12 +188,14 @@ const getBarChartData = async () => {
         ORDER BY day ASC
     `;
 
-  const formattedMetadata = appointmentCountByMonth.map(({ day, count }) => ({
+  const formattedMetadata = appointmentCountByDay.map(({ day, count }) => ({
     day,
     count: Number(count), // Convert BigInt to integer
   }));
+
   return formattedMetadata;
 };
+
 
 const getPieChartData = async () => {
   const appointmentStatusDistribution = await prisma.blog.groupBy({

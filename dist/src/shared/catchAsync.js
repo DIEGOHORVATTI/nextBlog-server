@@ -35,49 +35,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var app_1 = __importDefault(require("./app"));
-var config_1 = __importDefault(require("./config/config"));
-var server;
-function main() {
-    return __awaiter(this, void 0, void 0, function () {
+var catchAsync = function (controller) {
+    return function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var error_1;
         return __generator(this, function (_a) {
-            server = app_1.default.listen(config_1.default.port, function () {
-                console.log("\uD83D\uDE80 Server ready at: http://localhost:".concat(config_1.default.port, " and the process id is ").concat(process.pid));
-            });
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, controller(req, res, next)];
+                case 1:
+                    _a.sent();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_1 = _a.sent();
+                    next(error_1);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    });
-}
-var exitHandler = function () {
-    if (server) {
-        server.close(function () {
-            console.info('Server is shutting down');
-            process.exit(1);
-        });
-    }
-    else {
-        process.exit(1);
-    }
+    }); };
 };
-var unexpectedErrorHandler = function (error) {
-    console.log(error);
-    exitHandler();
-};
-process.on('uncaughtException', unexpectedErrorHandler);
-process.on('unhandledRejection', unexpectedErrorHandler);
-/*
-this will get fired upon stopping server by pressing ctrl + c
-process.on('SIGINT', () => {
-   console.log('SIGINT signal received');
-   unexpectedErrorHandler('SIGINT signal received');
-});
-*/
-process.on('SIGTERM', function () {
-    console.info('SIGTERM signal received');
-    unexpectedErrorHandler('SIGTERM signal received');
-});
-main();
+exports.default = catchAsync;

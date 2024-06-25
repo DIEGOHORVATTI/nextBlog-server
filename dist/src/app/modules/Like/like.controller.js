@@ -39,45 +39,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var app_1 = __importDefault(require("./app"));
-var config_1 = __importDefault(require("./config/config"));
-var server;
-function main() {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            server = app_1.default.listen(config_1.default.port, function () {
-                console.log("\uD83D\uDE80 Server ready at: http://localhost:".concat(config_1.default.port, " and the process id is ").concat(process.pid));
-            });
-            return [2 /*return*/];
-        });
+exports.LikeControllers = void 0;
+var catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
+var sendResponse_1 = require("../../../shared/sendResponse");
+var http_status_1 = __importDefault(require("http-status"));
+var like_service_1 = require("./like.service");
+var like = (0, catchAsync_1.default)(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var blogId, userId, result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                blogId = req.params.blogId;
+                userId = req.body.userId;
+                console.log('user', blogId, userId);
+                return [4 /*yield*/, like_service_1.LikeServices.like(blogId, userId)];
+            case 1:
+                result = _a.sent();
+                (0, sendResponse_1.sendResponse)(res, {
+                    statusCode: http_status_1.default.OK,
+                    success: true,
+                    message: "like created  successfully!",
+                    data: result,
+                });
+                return [2 /*return*/];
+        }
     });
-}
-var exitHandler = function () {
-    if (server) {
-        server.close(function () {
-            console.info('Server is shutting down');
-            process.exit(1);
-        });
-    }
-    else {
-        process.exit(1);
-    }
+}); });
+exports.LikeControllers = {
+    like: like
 };
-var unexpectedErrorHandler = function (error) {
-    console.log(error);
-    exitHandler();
-};
-process.on('uncaughtException', unexpectedErrorHandler);
-process.on('unhandledRejection', unexpectedErrorHandler);
-/*
-this will get fired upon stopping server by pressing ctrl + c
-process.on('SIGINT', () => {
-   console.log('SIGINT signal received');
-   unexpectedErrorHandler('SIGINT signal received');
-});
-*/
-process.on('SIGTERM', function () {
-    console.info('SIGTERM signal received');
-    unexpectedErrorHandler('SIGTERM signal received');
-});
-main();

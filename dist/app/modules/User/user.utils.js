@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -39,45 +62,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var app_1 = __importDefault(require("./app"));
-var config_1 = __importDefault(require("./config/config"));
-var server;
-function main() {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            server = app_1.default.listen(config_1.default.port, function () {
-                console.log("\uD83D\uDE80 Server ready at: http://localhost:".concat(config_1.default.port, " and the process id is ").concat(process.pid));
-            });
-            return [2 /*return*/];
-        });
+exports.hashedPassword = void 0;
+var bcrypt = __importStar(require("bcrypt"));
+var config_1 = __importDefault(require("../../../config/config"));
+var hashedPassword = function (password) { return __awaiter(void 0, void 0, void 0, function () {
+    var hashedPassword_1, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, bcrypt.hash(password, Number(config_1.default.bycrypt_salt_rounds))];
+            case 1:
+                hashedPassword_1 = _a.sent();
+                return [2 /*return*/, hashedPassword_1];
+            case 2:
+                error_1 = _a.sent();
+                throw new Error('Error hashing password');
+            case 3: return [2 /*return*/];
+        }
     });
-}
-var exitHandler = function () {
-    if (server) {
-        server.close(function () {
-            console.info('Server is shutting down');
-            process.exit(1);
-        });
-    }
-    else {
-        process.exit(1);
-    }
-};
-var unexpectedErrorHandler = function (error) {
-    console.log(error);
-    exitHandler();
-};
-process.on('uncaughtException', unexpectedErrorHandler);
-process.on('unhandledRejection', unexpectedErrorHandler);
-/*
-this will get fired upon stopping server by pressing ctrl + c
-process.on('SIGINT', () => {
-   console.log('SIGINT signal received');
-   unexpectedErrorHandler('SIGINT signal received');
-});
-*/
-process.on('SIGTERM', function () {
-    console.info('SIGTERM signal received');
-    unexpectedErrorHandler('SIGTERM signal received');
-});
-main();
+}); };
+exports.hashedPassword = hashedPassword;

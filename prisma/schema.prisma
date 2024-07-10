@@ -4,17 +4,19 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// generator client {
+//   provider        = "prisma-client-js"
+//   previewFeatures = ["fullTextSearch"]
+// }
+
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
-
 
 // role
 enum UserRole {
@@ -147,6 +149,7 @@ model Blog {
   id              String            @id @default(uuid())
   title           String
   content         String
+  votes           Int?              @default(0)
   category        String?
   image           String?
   conclusion      String
@@ -160,8 +163,20 @@ model Blog {
   views           Int?              @default(0)
   comment         Comment[]
   like            Like[]
+  tag             Tag[]
 
   @@map("blogs")
+}
+
+model Tag {
+  id     String @id @default(uuid())
+  name  String @unique
+  blogId String
+  blog   Blog   @relation(fields: [blogId], references: [id])
+   isDeleted     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  @@map("tags")
 }
 
 model Comment {

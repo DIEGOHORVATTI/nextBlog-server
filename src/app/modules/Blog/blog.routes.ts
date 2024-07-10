@@ -11,21 +11,19 @@ import { validateRequest } from "../../middlewares/validateRequest";
 const router = express.Router();
 router.get(
   "/",
-  // authGuard(UserRole.ADMIN,UserRole.SUPER_ADMIN,UserRole.BLOGGER),
+
   blogController.getAllBlogs
 );
-// router.get('/get-single-blog/:id',)
-
 router.get(
   "/my-blogs",
   authGuard(UserRole.BLOGGER),
   blogController.getMyAllBlogs
 );
-router.get("/:id",   authGuard(UserRole.ADMIN,UserRole.SUPER_ADMIN,UserRole.BLOGGER,UserRole.SUBSCRIBER,UserRole.MODERATOR),  blogController.getSingleBlog);
+router.get("/:id", blogController.getSingleBlog);
 
-router.get("/get-single-blog/:id",  
-//  authGuard(UserRole.ADMIN,UserRole.SUPER_ADMIN,UserRole.SUBSCRIBER),
-   blogController.getSingleBlogBYModerator);
+router.get("/get-single-blog/:id",
+
+  blogController.getSingleBlogBYModerator);
 
 
 router.post(
@@ -48,7 +46,7 @@ router.delete(
 
 router.patch(
   "/update-blog/:id",
-  authGuard(UserRole.MODERATOR,UserRole.BLOGGER,UserRole.ADMIN,UserRole.SUPER_ADMIN),
+  authGuard(UserRole.MODERATOR, UserRole.BLOGGER, UserRole.ADMIN, UserRole.SUPER_ADMIN),
   validateRequest(blogValidationSchema.updateBlog),
   blogController.updateBlog
 );
@@ -58,5 +56,7 @@ router.patch(
   validateRequest(blogValidationSchema.updateChangeApprovalStatusBlog),
   blogController.changeApprovalStatusBlog
 );
+
+router.patch('/vote-blog/:id', blogController.voteCount);
 
 export const blogRoutes = router;

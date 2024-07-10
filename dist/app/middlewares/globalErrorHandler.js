@@ -3,13 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var client_1 = require("@prisma/client");
-var http_status_1 = __importDefault(require("http-status"));
-var globalErrorhandler = function (err, req, res, next) {
-    var statusCode = http_status_1.default.INTERNAL_SERVER_ERROR;
-    var success = false;
-    var message = err.message || "something went wrong";
-    var error = err;
+const client_1 = require("@prisma/client");
+const http_status_1 = __importDefault(require("http-status"));
+const globalErrorhandler = (err, req, res, next) => {
+    let statusCode = http_status_1.default.INTERNAL_SERVER_ERROR;
+    let success = false;
+    let message = err.message || "something went wrong";
+    let error = err;
     if (err instanceof client_1.Prisma.PrismaClientValidationError) {
         (message = "Validation Error"), (error = err.message);
     }
@@ -20,9 +20,9 @@ var globalErrorhandler = function (err, req, res, next) {
         }
     }
     res.status(statusCode).json({
-        success: success,
-        message: message,
-        error: error,
+        success,
+        message,
+        error,
     });
 };
 exports.default = globalErrorhandler;

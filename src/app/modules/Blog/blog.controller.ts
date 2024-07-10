@@ -135,6 +135,21 @@ const getSingleBlogBYModerator = catchAsync(async (req: Request, res: Response) 
   });
 });
 
+const voteCount = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { action } = req.body;
+  console.log(id,action)
+  
+  const result = await blogServicres.countVote(id,action);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'voting updated successfully',
+    data: result,
+  });
+});
+
 
 export const blogController = {
   createBlog,
@@ -144,6 +159,7 @@ export const blogController = {
   deleteBlog,
   updateBlog,
   changeApprovalStatusBlog,
-  getSingleBlogBYModerator
+  getSingleBlogBYModerator,
+  voteCount
  
 };

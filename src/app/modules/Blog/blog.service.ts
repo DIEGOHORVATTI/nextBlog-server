@@ -91,142 +91,19 @@ const getAllBlogFomDB = async (
   };
 };
 
-// const getSingleBlogFromDB = async (id: string, user: any) => {
-//   console.log({user})
-//   const blogPost = await prisma.$transaction(async (tx) => {
-//     let includeOptions = {};
-//     console.log({includeOptions})
-
-//     switch (user.role) {
-//       case UserRole.ADMIN:
-//         includeOptions = {
-//           admin: true,
-//         };
-//         break;
-//       case UserRole.BLOGGER:
-//         includeOptions = {
-//           blogger: true,
-//         };
-//         break;
-//       case UserRole.SUBSCRIBER:
-//         includeOptions = {
-//           subscriber: true,
-//         };
-//         break;
-
-//       default:
-//         break;
-//     }
-
-//     // Find the blog post and return it
-//     const post = await tx.blog.findUnique({
-//       where: {
-//         id,
-//       },
-//       include: {
-//         author: true,
-
-//         comment: {
-//           include: {
-//             comment: {
-//               include: includeOptions
-//             },
-//           },
-//         },
-//       },
-//     });
-
-//     // const post = await tx.blog.findUnique({
-//     //   where: {
-//     //     id,
-//     //   },
-//     //   include: {
-//     //     author: true,
-//     //     comment: {
-//     //       include: {
-//     //         comment: {
-//     //           select: {
-//     //             id: true,
-//     //             email: true,
-//     //             role: true,
-//     //             profilePhoto:true
-//     //             ...(user:any) => {
-//     //               switch (user.role) {
-//     //                 case " SUBSCRIBER":
-//     //                   return { subscriber: true };
-//     //                 case " ADMIN":
-//     //                   return { admin: true };
-//     //                 case " MODERATOR":
-//     //                   return { moderator: true };
-//     //                 default:
-//     //                   return {};
-//     //               }
-//     //             },
-//     //           },
-//     //         },
-//     //       },
-//     //     },
-//     //   },
-//     // });
-
-//     // Increment views within the transaction
-//     await tx.blog.update({
-//       where: {
-//         id,
-//       },
-//       data: {
-//         views: {
-//           increment: 1,
-//         },
-//       },
-//     });
-
-//     return post;
-//   });
-
-//   return blogPost;
-// };
-
 const getSingleBlogFromDB = async (id: string, user: any) => {
   console.log({ user });
   const blogPost = await prisma.$transaction(async (tx) => {
     let includeOptions = {};
 
-    switch (user.role) {
-      case UserRole.ADMIN:
-        includeOptions = {
-          admin: true,
-        };
-        break;
-      case UserRole.BLOGGER:
-        includeOptions = {
-          author: true,
-        };
-        break;
-      case UserRole.SUBSCRIBER:
-        includeOptions = {
-          subscriber: true,
-        };
-        break;
-
-      default:
-        break;
-    }
-
-    // Find the blog post and return it
     const post = await tx.blog.findUnique({
       where: {
         id,
       },
       include: {
         author: true,
-        comment: {
-          include: {
-            comment: {
-              include: includeOptions,
-            },
-          },
-        },
+        comment: true,
+        tag:true
       },
     });
 
@@ -323,8 +200,6 @@ const getMyAllBlogsFomDB = async (
   };
 };
 
-
-
 const deleteBlogFromDB = async (id: string) => {
   // Use a Prisma transaction to ensure atomicity
   const result = await prisma.$transaction(async (tx) => {
@@ -382,18 +257,21 @@ const changeApprovalStatusDB = async (
     },
   });
 
-  const isCancel=await prisma.blog.findUnique({
-    where:{
+  const isCancel = await prisma.blog.findUnique({
+    where: {
       id,
-      publishedStatus:Published_status.CANCEL
-    }
-  })
+      publishedStatus: Published_status.CANCEL,
+    },
+  });
 
-  if(isCancel){
-    throw new HTTPError(httpStatus.BAD_REQUEST,'Can not updated its status is cancel')
+  if (isCancel) {
+    throw new HTTPError(
+      httpStatus.BAD_REQUEST,
+      "Can not updated its status is cancel"
+    );
   }
 
-  console.log(isCancel)
+  console.log(isCancel);
 
   const result = await prisma.blog.update({
     where: {
@@ -410,19 +288,60 @@ const changeApprovalStatusDB = async (
   return result;
 };
 
-const getSingleBlogBYModerator=async(id:string)=>{
- 
-  const blogData= await prisma.blog.findUniqueOrThrow({
-    where:{
-      id
-    },
-    include:{
-      author:true
-    }
-  })
+const countVote = async (id: any, action: string) => {
+  console.log(id, action);
 
-return blogData
-}
+  // Find the blog post by its unique ID
+  const blog = await prisma.blog.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  // Throw an error if the blog post is not found
+  if (!blog) {
+    throw new Error("Blog not found");
+  }
+
+  // Check if blog.votes is not null before updating
+  if (blog.votes !== null) {
+    // Update the votes based on the action
+    if (action === "upvote") {
+      blog.votes += 1;
+    } else if (action === "downvote") {
+      blog.votes -= 1;
+    } else {
+      throw new Error("Invalid action");
+    }
+  } else {
+    throw new Error("Votes cannot be null");
+  }
+
+  // Save the updated blog post with the new vote count
+  const updatedBlog = await prisma.blog.update({
+    where: {
+      id: id,
+    },
+    data: {
+      votes: blog.votes, // blog.votes is guaranteed to be a number here
+    },
+  });
+
+  return updatedBlog.votes;
+};
+
+const getSingleBlogBYModerator = async (id: string) => {
+  const blogData = await prisma.blog.findUniqueOrThrow({
+    where: {
+      id,
+    },
+    include: {
+      author: true,
+    },
+  });
+
+  return blogData;
+};
 
 export const blogServicres = {
   getAllBlogFomDB,
@@ -432,5 +351,6 @@ export const blogServicres = {
   deleteBlogFromDB,
   updateBlogIntoDB,
   changeApprovalStatusDB,
-  getSingleBlogBYModerator
+  getSingleBlogBYModerator,
+  countVote,
 };

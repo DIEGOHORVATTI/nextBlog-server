@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendResponse = void 0;
-var sendResponse = function (res, jsonData) {
+const sendResponse = (res, jsonData) => {
     res.status(jsonData.statusCode).json({
         statusCode: jsonData.statusCode,
         success: jsonData.success,

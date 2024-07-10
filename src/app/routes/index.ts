@@ -9,6 +9,7 @@ import { ModeratorRoutes } from '../modules/Moderator/moderator.routes';
 import { CommentRoutes } from '../modules/Comment/comment.routes';
 import { LikeRoutes } from '../modules/Like/like.routes';
 import { MetaRoutes } from '../modules/Meta/meta.routes';
+import { TagRoutes } from '../modules/Tag/tag.route';
 
 const router = express.Router();
 
@@ -48,6 +49,10 @@ const moduleRoutes = [
    {
       path: '/metadata',
       route: MetaRoutes,
+   },
+   {
+      path: '/tag',
+      route: TagRoutes,
    },
 ];
 

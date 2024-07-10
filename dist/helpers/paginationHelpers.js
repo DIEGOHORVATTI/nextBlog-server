@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generatePaginateAndSortOptions = void 0;
-var generatePaginateAndSortOptions = function (paginateAndSortOptions) {
-    var page = Number(paginateAndSortOptions.page) || 1;
-    var limit = Number(paginateAndSortOptions.limit) || 10;
-    var skip = (Number(page) - 1) * limit;
-    var sortBy = paginateAndSortOptions.sortBy || 'createdAt';
-    var sortOrder = paginateAndSortOptions.sortOrder || 'desc';
+const generatePaginateAndSortOptions = (paginateAndSortOptions) => {
+    const page = Number(paginateAndSortOptions.page) || 1;
+    const limit = Number(paginateAndSortOptions.limit) || 10;
+    const skip = (Number(page) - 1) * limit;
+    const sortBy = paginateAndSortOptions.sortBy || 'createdAt';
+    const sortOrder = paginateAndSortOptions.sortOrder || 'desc';
     return {
-        page: page,
-        limit: limit,
-        skip: skip,
-        sortBy: sortBy,
-        sortOrder: sortOrder,
+        page,
+        limit,
+        skip,
+        sortBy,
+        sortOrder,
     };
 };
 exports.generatePaginateAndSortOptions = generatePaginateAndSortOptions;

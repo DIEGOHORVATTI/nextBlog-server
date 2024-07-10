@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogValidationSchema = void 0;
-var zod_1 = require("zod");
-var createBlog = zod_1.z.object({
+const zod_1 = require("zod");
+const createBlog = zod_1.z.object({
     body: zod_1.z.object({
         title: zod_1.z.string(),
         content: zod_1.z.string(),
@@ -15,7 +15,7 @@ var createBlog = zod_1.z.object({
         updatedAt: zod_1.z.string(),
     })
 });
-var updateBlog = zod_1.z.object({
+const updateBlog = zod_1.z.object({
     body: zod_1.z.object({
         title: zod_1.z.string().optional(),
         content: zod_1.z.string().optional(),
@@ -23,13 +23,12 @@ var updateBlog = zod_1.z.object({
         conclusion: zod_1.z.string().optional()
     }),
 });
-var updateChangeApprovalStatusBlog = zod_1.z.object({
+const updateChangeApprovalStatusBlog = zod_1.z.object({
     body: zod_1.z.object({
         publishedStatus: zod_1.z.enum(["APPROVED", "CANCEL"]).optional()
     }),
 });
 exports.blogValidationSchema = {
-    createBlog: createBlog,
-    updateBlog: updateBlog,
-    updateChangeApprovalStatusBlog: updateChangeApprovalStatusBlog
+    createBlog, updateBlog,
+    updateChangeApprovalStatusBlog
 };

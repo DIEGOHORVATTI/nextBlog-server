@@ -4,13 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminRoutes = void 0;
-var express_1 = __importDefault(require("express"));
-var admin_controller_1 = require("./admin.controller");
-var validateRequest_1 = require("../../middlewares/validateRequest");
-var admin_ValidationSchema_1 = require("./admin.ValidationSchema");
-var authGuard_1 = __importDefault(require("../../middlewares/authGuard"));
-var client_1 = require("@prisma/client");
-var router = express_1.default.Router();
+const express_1 = __importDefault(require("express"));
+const admin_controller_1 = require("./admin.controller");
+const validateRequest_1 = require("../../middlewares/validateRequest");
+const admin_ValidationSchema_1 = require("./admin.ValidationSchema");
+const authGuard_1 = __importDefault(require("../../middlewares/authGuard"));
+const client_1 = require("@prisma/client");
+const router = express_1.default.Router();
 router.get('/', 
 // authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
 admin_controller_1.AdminController.getAllAdmin);

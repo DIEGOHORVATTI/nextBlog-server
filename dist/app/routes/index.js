@@ -3,18 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var auth_routes_1 = require("../modules/auth/auth.routes");
-var user_routes_1 = require("../modules/User/user.routes");
-var admin_routes_1 = require("../modules/Admin/admin.routes");
-var blog_routes_1 = require("../modules/Blog/blog.routes");
-var author_routes_1 = require("../modules/Author/author.routes");
-var moderator_routes_1 = require("../modules/Moderator/moderator.routes");
-var comment_routes_1 = require("../modules/Comment/comment.routes");
-var like_routes_1 = require("../modules/Like/like.routes");
-var meta_routes_1 = require("../modules/Meta/meta.routes");
-var router = express_1.default.Router();
-var moduleRoutes = [
+const express_1 = __importDefault(require("express"));
+const auth_routes_1 = require("../modules/auth/auth.routes");
+const user_routes_1 = require("../modules/User/user.routes");
+const admin_routes_1 = require("../modules/Admin/admin.routes");
+const blog_routes_1 = require("../modules/Blog/blog.routes");
+const author_routes_1 = require("../modules/Author/author.routes");
+const moderator_routes_1 = require("../modules/Moderator/moderator.routes");
+const comment_routes_1 = require("../modules/Comment/comment.routes");
+const like_routes_1 = require("../modules/Like/like.routes");
+const meta_routes_1 = require("../modules/Meta/meta.routes");
+const router = express_1.default.Router();
+const moduleRoutes = [
     {
         path: '/user',
         route: user_routes_1.userRoutes,
@@ -52,5 +52,5 @@ var moduleRoutes = [
         route: meta_routes_1.MetaRoutes,
     },
 ];
-moduleRoutes.forEach(function (route) { return router.use(route.path, route.route); });
+moduleRoutes.forEach((route) => router.use(route.path, route.route));
 exports.default = router;

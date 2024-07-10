@@ -4,14 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogRoutes = void 0;
-var express_1 = __importDefault(require("express"));
-var authGuard_1 = __importDefault(require("../../middlewares/authGuard"));
-var client_1 = require("@prisma/client");
+const express_1 = __importDefault(require("express"));
+const authGuard_1 = __importDefault(require("../../middlewares/authGuard"));
+const client_1 = require("@prisma/client");
 // import { fileUploader } from "../../../helpers/fileUploader";
-var blog_validation_1 = require("./blog.validation");
-var blog_controller_1 = require("./blog.controller");
-var validateRequest_1 = require("../../middlewares/validateRequest");
-var router = express_1.default.Router();
+const blog_validation_1 = require("./blog.validation");
+const blog_controller_1 = require("./blog.controller");
+const validateRequest_1 = require("../../middlewares/validateRequest");
+const router = express_1.default.Router();
 router.get("/", 
 // authGuard(UserRole.ADMIN,UserRole.SUPER_ADMIN,UserRole.BLOGGER),
 blog_controller_1.blogController.getAllBlogs);

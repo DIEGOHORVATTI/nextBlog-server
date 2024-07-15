@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
-import { sendResponse } from "../../../shared/sendResponse";
-import httpStatus from "http-status";
-import catchAsync from "../../../shared/catchAsync";
-import { blogServicres } from "./blog.service";
-import { VerifiedUser } from "../../interfaces/common";
-import { filterValidQueryParams } from "../../../shared/filterValidQueryParams";
+import { sendResponse } from '../../../shared/sendResponse';
+import httpStatus from 'http-status';
+import catchAsync from '../../../shared/catchAsync';
+import { blogServicres } from './blog.service';
+import { VerifiedUser } from '../../interfaces/common';
+import { filterValidQueryParams } from '../../../shared/filterValidQueryParams';
 
-import { paginationAndSortingParams } from "../../../shared/appConstants";
-import { blogValidParams } from "./blog.constant";
-import { any } from "zod";
+import { paginationAndSortingParams } from '../../../shared/appConstants';
+import { blogValidParams } from './blog.constant';
+import { any } from 'zod';
 
 const createBlog = catchAsync(
   async (req: Request & { user?: any }, res: Response) => {
@@ -21,74 +21,73 @@ const createBlog = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.CREATED,
       success: true,
-      message: "Blog Created Successfully!",
+      message: 'Blog Created Successfully!',
       data: result,
     });
-  }
+  },
 );
 
 const getAllBlogs = catchAsync(async (req: Request, res: Response) => {
   const validQueryParams = filterValidQueryParams(req.query, blogValidParams);
   const paginationAndSortingQueryParams = filterValidQueryParams(
     req.query,
-    paginationAndSortingParams
+    paginationAndSortingParams,
   );
 
   const result = await blogServicres.getAllBlogFomDB(
     validQueryParams,
-    paginationAndSortingQueryParams
+    paginationAndSortingQueryParams,
   );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Blog data fetched successfully!",
+    message: 'Blog data fetched successfully!',
     meta: result.meta,
     data: result.result,
   });
 });
 
-const getSingleBlog = catchAsync(async (req: Request & {user?:any}, res: Response) => {
-  const { id } = req.params;
-  const user = req.user;
+const getSingleBlog = catchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    const { id } = req.params;
+    const user = req.user;
 
-  const result = await blogServicres.getSingleBlogFromDB(id,user);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Blog data fetched successfully!",
-    data: result,
-  });
-});
-
+    const result = await blogServicres.getSingleBlogFromDB(id, user);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Blog data fetched successfully!',
+      data: result,
+    });
+  },
+);
 
 const getMyAllBlogs = catchAsync(
   async (req: Request & { user?: any }, res: Response) => {
     const user = req.user;
-    console.log(user)
-  
+    console.log(user);
 
     const validQueryParams = filterValidQueryParams(req.query, blogValidParams);
     const paginationAndSortingQueryParams = filterValidQueryParams(
       req.query,
-      paginationAndSortingParams
+      paginationAndSortingParams,
     );
 
     const result = await blogServicres.getMyAllBlogsFomDB(
       validQueryParams,
       paginationAndSortingQueryParams,
       user,
-      
     );
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "My blogs data fetched successfully!",
+      message: 'My blogs data fetched successfully!',
       meta: result.meta,
       data: result.result,
     });
-  }
+  },
 );
 const deleteBlog = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -97,7 +96,7 @@ const deleteBlog = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Blog data deleted successfully!",
+    message: 'Blog data deleted successfully!',
     data: result,
   });
 });
@@ -108,39 +107,43 @@ const updateBlog = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Blog data updated successfully!",
+    message: 'Blog data updated successfully!',
     data: result,
   });
 });
-const changeApprovalStatusBlog = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
+const changeApprovalStatusBlog = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
 
-  const result = await blogServicres.changeApprovalStatusDB(id, req.body);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Approval status  updated successfully!",
-    data: result,
-  });
-});
-const getSingleBlogBYModerator = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
+    const result = await blogServicres.changeApprovalStatusDB(id, req.body);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Approval status  updated successfully!',
+      data: result,
+    });
+  },
+);
+const getSingleBlogBYModerator = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
 
-  const result = await blogServicres.getSingleBlogBYModerator(id);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Blog fetched successfully!",
-    data: result,
-  });
-});
+    const result = await blogServicres.getSingleBlogBYModerator(id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Blog fetched successfully!',
+      data: result,
+    });
+  },
+);
 
 const voteCount = catchAsync(async (req, res) => {
   const { id } = req.params;
   const { action } = req.body;
-  console.log(id,action)
-  
-  const result = await blogServicres.countVote(id,action);
+  console.log(id, action);
+
+  const result = await blogServicres.countVote(id, action);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -149,7 +152,6 @@ const voteCount = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
 
 export const blogController = {
   createBlog,
@@ -160,6 +162,5 @@ export const blogController = {
   updateBlog,
   changeApprovalStatusBlog,
   getSingleBlogBYModerator,
-  voteCount
- 
+  voteCount,
 };

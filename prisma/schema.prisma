@@ -169,13 +169,14 @@ model Blog {
 }
 
 model Tag {
-  id     String @id @default(uuid())
-  name  String @unique
-  blogId String
-  blog   Blog   @relation(fields: [blogId], references: [id])
-   isDeleted     Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id        String   @id @default(uuid())
+  name      String   @unique
+  blogId    String
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@map("tags")
 }
 

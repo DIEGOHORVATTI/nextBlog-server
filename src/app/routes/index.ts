@@ -14,46 +14,46 @@ import { TagRoutes } from '../modules/Tag/tag.route';
 const router = express.Router();
 
 const moduleRoutes = [
-   {
-      path: '/user',
-      route: userRoutes,
-   },
-   {
-      path: '/admin',
-      route: AdminRoutes,
-   },
-   {
-      path: '/author',
-      route: AuthorRoutes,
-   },
-   {
-      path: '/moderator',
-      route: ModeratorRoutes,
-   },
-   {
-      path: '/auth',
-      route: authRoutes,
-   },
-   {
-      path: '/blog',
-      route: blogRoutes,
-   },
-   {
-      path: '/comment',
-      route: CommentRoutes,
-   },
-   {
-      path: '/like',
-      route: LikeRoutes,
-   },
-   {
-      path: '/metadata',
-      route: MetaRoutes,
-   },
-   {
-      path: '/tag',
-      route: TagRoutes,
-   },
+  {
+    path: '/user',
+    route: userRoutes,
+  },
+  {
+    path: '/admin',
+    route: AdminRoutes,
+  },
+  {
+    path: '/author',
+    route: AuthorRoutes,
+  },
+  {
+    path: '/moderator',
+    route: ModeratorRoutes,
+  },
+  {
+    path: '/auth',
+    route: authRoutes,
+  },
+  {
+    path: '/blog',
+    route: blogRoutes,
+  },
+  {
+    path: '/comment',
+    route: CommentRoutes,
+  },
+  {
+    path: '/like',
+    route: LikeRoutes,
+  },
+  {
+    path: '/metadata',
+    route: MetaRoutes,
+  },
+  {
+    path: '/tag',
+    route: TagRoutes,
+  },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const createAdminSchema = z.object({
   body: z.object({
@@ -14,7 +14,7 @@ const createAuthorSchema = z.object({
     email: z.string().email(),
     name: z.string(),
     contactNumber: z.string(),
-    gender: z.enum(["MALE", "FEMALE"]),
+    gender: z.enum(['MALE', 'FEMALE']),
   }),
 });
 const createModaratorSchema = z.object({
@@ -23,13 +23,13 @@ const createModaratorSchema = z.object({
     email: z.string().email(),
     name: z.string(),
     contactNumber: z.string(),
-    gender: z.enum(["MALE", "FEMALE"]),
+    gender: z.enum(['MALE', 'FEMALE']),
   }),
 });
 
 const userUpdateStatus = z.object({
   body: z.object({
-    status: z.enum(["ACTIVE", "BLOCKED", "DELETED"]),
+    status: z.enum(['ACTIVE', 'BLOCKED', 'DELETED']),
   }),
 });
 
@@ -37,5 +37,5 @@ export const userValidationSchema = {
   createAdminSchema,
   userUpdateStatus,
   createAuthorSchema,
-  createModaratorSchema
+  createModaratorSchema,
 };

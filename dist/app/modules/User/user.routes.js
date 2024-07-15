@@ -17,7 +17,7 @@ router.patch('/update-my-profile', (0, authGuard_1.default)(client_1.UserRole.AD
 router.patch('/:id/status', (0, authGuard_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), (0, validateRequest_1.validateRequest)(user_validationSchema_1.userValidationSchema.userUpdateStatus), user_controller_1.userController.changeProfileStatus);
 router.post('/create-admin', (0, authGuard_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), (0, validateRequest_1.validateRequest)(user_validationSchema_1.userValidationSchema.createAdminSchema), user_controller_1.userController.createAdmin);
 router.post('/create-author', 
-//  authGuard(UserRole.ADMIN,UserRole.SUPER_ADMIN),validateRequest(userValidationSchema.createAuthorSchema), 
+//  authGuard(UserRole.ADMIN,UserRole.SUPER_ADMIN),validateRequest(userValidationSchema.createAuthorSchema),
 user_controller_1.userController.createAuthor);
 router.post('/create-moderator', 
 // authGuard(UserRole.ADMIN,UserRole.SUPER_ADMIN),

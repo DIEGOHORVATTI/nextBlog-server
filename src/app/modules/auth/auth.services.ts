@@ -1,43 +1,128 @@
-import * as bcrypt from "bcrypt";
-import { Secret } from "jsonwebtoken";
-import { UserStatus } from "@prisma/client";
-import prisma from "../../../shared/prismaClient";
-import { jwtHelpers } from "../../../helpers/jwtHelper";
-import config from "../../../config/config";
-import emailSender from "./emailSender";
-import path from "path";
-import fs from "fs";
-import { HTTPError } from "../../errors/HTTPError";
-import httpStatus from "http-status";
-import { VerifiedUser } from "../../interfaces/common";
+import * as bcrypt from 'bcrypt';
+import { Secret } from 'jsonwebtoken';
+import { UserStatus } from '@prisma/client';
+import prisma from '../../../shared/prismaClient';
+import { jwtHelpers } from '../../../helpers/jwtHelper';
+import config from '../../../config/config';
+import emailSender from './emailSender';
+import path from 'path';
+import fs from 'fs';
+import { HTTPError } from '../../errors/HTTPError';
+import httpStatus from 'http-status';
+import { VerifiedUser } from '../../interfaces/common';
+
+// const loginUser = async (payload: { email: string; password: string }) => {
+//   console.log(payload);
+//   // const userData = await prisma.user.findUniqueOrThrow({
+//   //   where: {
+//   //     email: payload.email,
+//   //     status: UserStatus.ACTIVE,
+//   //   },
+//   // });
+
+//   const userData = await prisma.user.findUnique({
+//     where: {
+//       email: payload.email,
+//       status:UserStatus.ACTIVE
+//     },
+//   });
+
+//   if(!userData){
+//     throw new HTTPError(httpStatus.BAD_REQUEST,'Email is not valid')
+//   }
+
+//   const isCorrectPassword: boolean = await bcrypt.compare(
+//     payload.password,
+//     userData.password
+//   );
+
+//   if (!isCorrectPassword) {
+//     throw new Error("Password is incorrect!");
+//   }
+//   const accessToken = jwtHelpers.generateToken(
+//     {
+//       userId: userData.id,
+//       name: userData.name,
+//       email: userData.email,
+//       role: userData.role,
+//       profilePhoto: userData.profilePhoto,
+//     },
+//     config.jwt.jwt_secret as Secret,
+//     config.jwt.expires_in as string
+//   );
+
+//   const refreshToken = jwtHelpers.generateToken(
+//     {
+//       email: userData.email,
+//       role: userData.role,
+//     },
+//     config.jwt.refresh_token_secret as Secret,
+//     config.jwt.refresh_token_expires_in as string
+//   );
+
+//   return {
+//     accessToken,
+//     refreshToken,
+//     passwordChangeRequired: userData.passwordChangeRequired,
+//   };
+// };
+
+// const refreshToken = async (token: string) => {
+//   let decodedData;
+//   try {
+//     decodedData = jwtHelpers.verifyToken(
+//       token,
+//       config.jwt.refresh_token_secret as Secret
+//     );
+//   } catch (err) {
+//     throw new Error("You are not authorized!");
+//   }
+
+//   const userData = await prisma.user.findUniqueOrThrow({
+//     where: {
+//       email: decodedData.email,
+//       status: UserStatus.ACTIVE,
+//     },
+//   });
+
+//   const accessToken = jwtHelpers.generateToken(
+//     {
+//       userId: userData.id,
+//       name: userData.name,
+//       email: userData.email,
+//       role: userData.role,
+//       profilePhoto: userData.profilePhoto,
+//     },
+//     config.jwt.jwt_secret as Secret,
+//     config.jwt.expires_in as string
+//   );
+
+//   return {
+//     accessToken,
+//   };
+// };
 
 const loginUser = async (payload: { email: string; password: string }) => {
   console.log(payload);
-  // const userData = await prisma.user.findUniqueOrThrow({
-  //   where: {
-  //     email: payload.email,
-  //     status: UserStatus.ACTIVE,
-  //   },
-  // });
 
   const userData = await prisma.user.findUnique({
     where: {
       email: payload.email,
-      status:UserStatus.ACTIVE
+      status: UserStatus.ACTIVE,
     },
   });
 
-  if(!userData){
-    throw new HTTPError(httpStatus.BAD_REQUEST,'Email is not valid')
+  if (!userData) {
+    throw new HTTPError(httpStatus.BAD_REQUEST, 'Email is not valid');
   }
 
   const isCorrectPassword: boolean = await bcrypt.compare(
     payload.password,
-    userData.password
+    userData.password,
   );
 
   if (!isCorrectPassword) {
-    throw new Error("Password is incorrect!");
+    throw new Error('Password is incorrect!');
   }
   const accessToken = jwtHelpers.generateToken(
     {
@@ -48,8 +133,10 @@ const loginUser = async (payload: { email: string; password: string }) => {
       profilePhoto: userData.profilePhoto,
     },
     config.jwt.jwt_secret as Secret,
-    config.jwt.expires_in as string
+    config.jwt.expires_in as string,
   );
+
+  console.log(accessToken);
 
   const refreshToken = jwtHelpers.generateToken(
     {
@@ -57,7 +144,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
       role: userData.role,
     },
     config.jwt.refresh_token_secret as Secret,
-    config.jwt.refresh_token_expires_in as string
+    config.jwt.refresh_token_expires_in as string,
   );
 
   return {
@@ -72,16 +159,15 @@ const refreshToken = async (token: string) => {
   try {
     decodedData = jwtHelpers.verifyToken(
       token,
-      config.jwt.refresh_token_secret as Secret
+      config.jwt.refresh_token_secret as Secret,
     );
   } catch (err) {
-    throw new Error("You are not authorized!");
+    throw new Error('You are not authorized!');
   }
 
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
       email: decodedData.email,
-      status: UserStatus.ACTIVE,
     },
   });
 
@@ -94,7 +180,7 @@ const refreshToken = async (token: string) => {
       profilePhoto: userData.profilePhoto,
     },
     config.jwt.jwt_secret as Secret,
-    config.jwt.expires_in as string
+    config.jwt.expires_in as string,
   );
 
   return {
@@ -114,11 +200,11 @@ const changePassword = async (user: VerifiedUser, payload: any) => {
   //@ checking if the provided old password is correct
   const isCorrectPassword: boolean = await bcrypt.compare(
     payload.oldPassword,
-    userData.password
+    userData.password,
   );
 
   if (!isCorrectPassword) {
-    throw new Error("Password is incorrect!");
+    throw new Error('Password is incorrect!');
   }
 
   //@ hashing the new password
@@ -136,7 +222,7 @@ const changePassword = async (user: VerifiedUser, payload: any) => {
   });
 
   return {
-    message: "Password change successfully",
+    message: 'Password change successfully',
   };
 };
 
@@ -156,7 +242,7 @@ const forgotPassword = async ({ email }: { email: string }) => {
       role: userData.role,
     },
     config.jwt.reset_password_token_secret as Secret,
-    config.jwt.reset_token_expires_in as string
+    config.jwt.reset_token_expires_in as string,
   );
 
   //@ generating a link to send via email
@@ -165,18 +251,18 @@ const forgotPassword = async ({ email }: { email: string }) => {
   //@ read HTML template file
   const htmlFilePath = path.join(
     process.cwd(),
-    "/src/templates/reset_pass_template.html"
+    '/src/templates/reset_pass_template.html',
   );
 
-  const htmlTemplate = fs.readFileSync(htmlFilePath, "utf8");
-  const htmlContent = htmlTemplate.replace("{{resetPasswordLink}}", link);
+  const htmlTemplate = fs.readFileSync(htmlFilePath, 'utf8');
+  const htmlContent = htmlTemplate.replace('{{resetPasswordLink}}', link);
 
   await emailSender(userData.email, htmlContent);
 };
 
 const resetPassword = async (
   payload: { id: string; newPassword: string },
-  token: string
+  token: string,
 ) => {
   const isUserExist = await prisma.user.findUnique({
     where: {
@@ -186,21 +272,21 @@ const resetPassword = async (
   });
 
   if (!isUserExist) {
-    throw new HTTPError(httpStatus.BAD_REQUEST, "User not found!");
+    throw new HTTPError(httpStatus.BAD_REQUEST, 'User not found!');
   }
 
   const isVarified = jwtHelpers.verifyToken(
     token,
-    config.jwt.reset_password_token_secret as string
+    config.jwt.reset_password_token_secret as string,
   );
 
   if (!isVarified) {
-    throw new HTTPError(httpStatus.UNAUTHORIZED, "Something went wrong!");
+    throw new HTTPError(httpStatus.UNAUTHORIZED, 'Something went wrong!');
   }
 
   const password = await bcrypt.hash(
     payload.newPassword,
-    Number(config.bycrypt_salt_rounds)
+    Number(config.bycrypt_salt_rounds),
   );
 
   await prisma.user.update({

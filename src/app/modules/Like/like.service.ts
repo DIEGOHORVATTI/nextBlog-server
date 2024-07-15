@@ -1,6 +1,6 @@
-import httpStatus from "http-status";
-import prisma from "../../../shared/prismaClient";
-import { HTTPError } from "../../errors/HTTPError";
+import httpStatus from 'http-status';
+import prisma from '../../../shared/prismaClient';
+import { HTTPError } from '../../errors/HTTPError';
 
 const like = async (blogId: string, userId: string) => {
   console.log({ blogId, userId });

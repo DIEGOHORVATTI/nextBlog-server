@@ -12,23 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LikeControllers = void 0;
+exports.TagControllers = void 0;
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const sendResponse_1 = require("../../../shared/sendResponse");
 const http_status_1 = __importDefault(require("http-status"));
-const like_service_1 = require("./like.service");
-const like = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { blogId } = req.params;
-    const { userId } = req.body;
-    console.log('user', blogId, userId);
-    const result = yield like_service_1.LikeServices.like(blogId, userId);
+const tag_service_1 = require("./tag.service");
+const addTag = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield tag_service_1.TagServices.addTag(req.body);
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'like created  successfully!',
+        message: 'Tag created  successfully!',
         data: result,
     });
 }));
-exports.LikeControllers = {
-    like,
+exports.TagControllers = {
+    addTag,
 };

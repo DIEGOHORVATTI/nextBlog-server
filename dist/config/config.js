@@ -21,7 +21,7 @@ exports.default = {
     cloudinary: {
         cloud_name: process.env.CLOUD_NAME,
         api_key: process.env.API_KEY,
-        api_secret: process.env.API_SECRET
+        api_secret: process.env.API_SECRET,
     },
     reset_pass_link: process.env.RESET_PASS_LINK,
     sender_email: process.env.SENDER_EMAIL,

@@ -8,7 +8,7 @@ const express_1 = __importDefault(require("express"));
 const like_controller_1 = require("./like.controller");
 const router = express_1.default.Router();
 // router.post("/:id/unlike", authGuard(UserRole.ADMIN,UserRole.MODERATOR,UserRole.SUBSCRIBER,UserRole.SUPER_ADMIN), LikeControllers.unlike);
-router.post("/:blogId", 
+router.post('/:blogId', 
 //  authGuard(UserRole.ADMIN,UserRole.MODERATOR,UserRole.SUBSCRIBER,UserRole.SUPER_ADMIN),
 like_controller_1.LikeControllers.like);
 exports.LikeRoutes = router;

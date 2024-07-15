@@ -39,7 +39,7 @@ const getAllModeratorFomDB = (queryParams, paginationAndSortingQueryParams) => _
     //@ searching
     if (q) {
         const searchConditions = moderator_constant_1.moderatorSearchableFields.map((field) => ({
-            [field]: { contains: q, mode: "insensitive" },
+            [field]: { contains: q, mode: 'insensitive' },
         }));
         conditions.push({ OR: searchConditions });
     }
@@ -88,21 +88,21 @@ const updateModeratorIntoDB = (id, data) => __awaiter(void 0, void 0, void 0, fu
     if (data.name) {
         yield prismaClient_1.default.user.update({
             where: {
-                email: moderatorData.email
+                email: moderatorData.email,
             },
             data: {
-                name: data.name
-            }
+                name: data.name,
+            },
         });
     }
     if (data.profilePhoto) {
         yield prismaClient_1.default.user.update({
             where: {
-                email: moderatorData.email
+                email: moderatorData.email,
             },
             data: {
-                profilePhoto: data.profilePhoto
-            }
+                profilePhoto: data.profilePhoto,
+            },
         });
     }
     const result = yield prismaClient_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {

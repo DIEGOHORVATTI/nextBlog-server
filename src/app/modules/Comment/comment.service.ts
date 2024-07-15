@@ -1,12 +1,12 @@
-import { Comment } from "@prisma/client";
-import prisma from "../../../shared/prismaClient";
-import { TComment } from "./comment.constant";
+import { Comment } from '@prisma/client';
+import prisma from '../../../shared/prismaClient';
+import { TComment } from './comment.constant';
 
 const createCommentIntoDB = async (user: any, payload: TComment) => {
-  console.log(user)
+  console.log(user);
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
-      email: user?.email
+      email: user?.email,
     },
   });
 
@@ -27,10 +27,9 @@ const createCommentIntoDB = async (user: any, payload: TComment) => {
 const updateCommentIntoDb = async (
   id: string,
   payload: Partial<Comment>,
-  user: any
+  user: any,
 ) => {
-
-  console.log(payload)
+  console.log(payload);
   const commentorData = await prisma.user.findUniqueOrThrow({
     where: {
       email: user.email,
@@ -48,83 +47,75 @@ const updateCommentIntoDb = async (
     where: {
       id,
     },
-  data:payload
+    data: payload,
   });
   return result;
 };
 
-const deleteCommentFromDB=async(id:string,user:any)=>{
-
-   await prisma.user.findUniqueOrThrow({
-    where:{
-      email:user.email
-    }
-  })
+const deleteCommentFromDB = async (id: string, user: any) => {
+  await prisma.user.findUniqueOrThrow({
+    where: {
+      email: user.email,
+    },
+  });
 
   await prisma.comment.findUniqueOrThrow({
-    where:{
-      id
-    }
-  })
+    where: {
+      id,
+    },
+  });
 
   const result = await prisma.comment.delete({
-    where:{
-      id
-    }
-  })
+    where: {
+      id,
+    },
+  });
 
-  console.log(result)
-  return result
-}
+  console.log(result);
+  return result;
+};
 
-const getAllCommentsFromDB=async(blogId:string)=>{
+const getAllCommentsFromDB = async (blogId: string) => {
   await prisma.blog.findUniqueOrThrow({
-    where:{
-      id:blogId
-    }
-  })
-
-  const result =await prisma.comment.findMany({
-    where:{
-      blogId:blogId
+    where: {
+      id: blogId,
     },
-    include:{
-      comment:true,
-      
+  });
+
+  const result = await prisma.comment.findMany({
+    where: {
+      blogId: blogId,
     },
-    orderBy:{
-      createdAt:'asc'
-    }
-    
-  },
-  
-)
- return result
-}
+    include: {
+      comment: true,
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  });
+  return result;
+};
 
-const getSingleCommentFromDB=async(id:string,user:any)=>{
-
+const getSingleCommentFromDB = async (id: string, user: any) => {
   await prisma.user.findUniqueOrThrow({
-    where:{
-      email:user.email
-    }
-  })
+    where: {
+      email: user.email,
+    },
+  });
 
   const result = await prisma.comment.findFirstOrThrow({
-    where:{
+    where: {
       id,
-      commentorId:user.id
-    }
-  })
- return result
-}
+      commentorId: user.id,
+    },
+  });
+  return result;
+};
 
 export const CommentServices = {
   createCommentIntoDB,
   updateCommentIntoDb,
   deleteCommentFromDB,
   getAllCommentsFromDB,
-  getSingleCommentFromDB
-
-
+  getSingleCommentFromDB,
 };

@@ -1,60 +1,66 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction } from 'express';
 
-import authGuard from "../../middlewares/authGuard";
-import { UserRole } from "@prisma/client";
+import authGuard from '../../middlewares/authGuard';
+import { UserRole } from '@prisma/client';
 // import { fileUploader } from "../../../helpers/fileUploader";
-import { blogValidationSchema } from "./blog.validation";
-import { blogController } from "./blog.controller";
-import { userController } from "../User/user.controller";
-import { validateRequest } from "../../middlewares/validateRequest";
+import { blogValidationSchema } from './blog.validation';
+import { blogController } from './blog.controller';
+import { userController } from '../User/user.controller';
+import { validateRequest } from '../../middlewares/validateRequest';
 
 const router = express.Router();
 router.get(
-  "/",
+  '/',
 
-  blogController.getAllBlogs
+  blogController.getAllBlogs,
 );
 router.get(
-  "/my-blogs",
+  '/my-blogs',
   authGuard(UserRole.BLOGGER),
-  blogController.getMyAllBlogs
+  blogController.getMyAllBlogs,
 );
-router.get("/:id", blogController.getSingleBlog);
+router.get('/:id', blogController.getSingleBlog);
 
-router.get("/get-single-blog/:id",
+router.get(
+  '/get-single-blog/:id',
 
-  blogController.getSingleBlogBYModerator);
-
+  blogController.getSingleBlogBYModerator,
+);
 
 router.post(
-  "/create-blog",
+  '/create-blog',
 
   authGuard(UserRole.BLOGGER),
   // validateRequest(blogValidationSchema.createBlog),
-  blogController.createBlog
+  blogController.createBlog,
 );
 router.delete(
-  "/:id",
+  '/:id',
   authGuard(
     UserRole.SUPER_ADMIN,
     UserRole.ADMIN,
     UserRole.BLOGGER,
-    UserRole.MODERATOR
+    UserRole.MODERATOR,
   ),
-  blogController.deleteBlog
+  blogController.deleteBlog,
 );
 
 router.patch(
-  "/update-blog/:id",
-  authGuard(UserRole.MODERATOR, UserRole.BLOGGER, UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  '/update-blog/:id',
+  authGuard(
+    UserRole.MODERATOR,
+    UserRole.BLOGGER,
+    UserRole.ADMIN,
+    UserRole.SUPER_ADMIN,
+  ),
   validateRequest(blogValidationSchema.updateBlog),
-  blogController.updateBlog
+  blogController.updateBlog,
 );
 router.patch(
-  "/change-approval-status/:id",
+  '/change-approval-status/:id',
   // authGuard(UserRole.MODERATOR,UserRole.ADMIN,UserRole.SUPER_ADMIN),
   validateRequest(blogValidationSchema.updateChangeApprovalStatusBlog),
-  blogController.changeApprovalStatusBlog
+  blogController.changeApprovalStatusBlog,
 );
 
 router.patch('/vote-blog/:id', blogController.voteCount);

@@ -105,21 +105,21 @@ const updateAuthorIntoDB = (id, data) => __awaiter(void 0, void 0, void 0, funct
     if (data.name) {
         yield prismaClient_1.default.user.update({
             where: {
-                email: authorData.email
+                email: authorData.email,
             },
             data: {
-                name: data.name
-            }
+                name: data.name,
+            },
         });
     }
     if (data.profilePhoto) {
         yield prismaClient_1.default.user.update({
             where: {
-                email: authorData.email
+                email: authorData.email,
             },
             data: {
-                profilePhoto: data.profilePhoto
-            }
+                profilePhoto: data.profilePhoto,
+            },
         });
     }
     const result = yield prismaClient_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
@@ -136,7 +136,7 @@ const updateAuthorIntoDB = (id, data) => __awaiter(void 0, void 0, void 0, funct
                 },
                 data: {
                     //   profilePhoto: data.profilePhoto,
-                    name: updatedModerator.name
+                    name: updatedModerator.name,
                 },
             });
         }

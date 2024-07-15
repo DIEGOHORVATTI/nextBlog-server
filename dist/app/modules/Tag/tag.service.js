@@ -12,23 +12,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LikeControllers = void 0;
-const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
-const sendResponse_1 = require("../../../shared/sendResponse");
+exports.TagServices = void 0;
 const http_status_1 = __importDefault(require("http-status"));
-const like_service_1 = require("./like.service");
-const like = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { blogId } = req.params;
-    const { userId } = req.body;
-    console.log('user', blogId, userId);
-    const result = yield like_service_1.LikeServices.like(blogId, userId);
-    (0, sendResponse_1.sendResponse)(res, {
-        statusCode: http_status_1.default.OK,
-        success: true,
-        message: 'like created  successfully!',
-        data: result,
+const prismaClient_1 = __importDefault(require("../../../shared/prismaClient"));
+const HTTPError_1 = require("../../errors/HTTPError");
+const addTag = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const blogData = yield prismaClient_1.default.blog.findUnique({
+        where: {
+            id: data.blogId,
+        },
     });
-}));
-exports.LikeControllers = {
-    like,
+    if (!blogData) {
+        throw new HTTPError_1.HTTPError(http_status_1.default.BAD_REQUEST, 'Blog not found');
+    }
+    const result = yield prismaClient_1.default.tag.create({
+        data,
+    });
+    return result;
+});
+exports.TagServices = {
+    addTag,
 };

@@ -8,14 +8,14 @@ const http_status_1 = __importDefault(require("http-status"));
 const globalErrorhandler = (err, req, res, next) => {
     let statusCode = http_status_1.default.INTERNAL_SERVER_ERROR;
     let success = false;
-    let message = err.message || "something went wrong";
+    let message = err.message || 'something went wrong';
     let error = err;
     if (err instanceof client_1.Prisma.PrismaClientValidationError) {
-        (message = "Validation Error"), (error = err.message);
+        (message = 'Validation Error'), (error = err.message);
     }
     else if (err instanceof client_1.Prisma.PrismaClientKnownRequestError) {
-        if (err.code === "P2002") {
-            message = "Duplicate Key Error";
+        if (err.code === 'P2002') {
+            message = 'Duplicate Key Error';
             error = err.meta;
         }
     }

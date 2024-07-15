@@ -13,6 +13,7 @@ const moderator_routes_1 = require("../modules/Moderator/moderator.routes");
 const comment_routes_1 = require("../modules/Comment/comment.routes");
 const like_routes_1 = require("../modules/Like/like.routes");
 const meta_routes_1 = require("../modules/Meta/meta.routes");
+const tag_route_1 = require("../modules/Tag/tag.route");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -50,6 +51,10 @@ const moduleRoutes = [
     {
         path: '/metadata',
         route: meta_routes_1.MetaRoutes,
+    },
+    {
+        path: '/tag',
+        route: tag_route_1.TagRoutes,
     },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

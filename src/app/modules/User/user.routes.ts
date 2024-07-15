@@ -1,66 +1,66 @@
-import express from "express";
+import express from 'express';
 
-import authGuard from "../../middlewares/authGuard";
-import { UserRole } from "@prisma/client";
+import authGuard from '../../middlewares/authGuard';
+import { UserRole } from '@prisma/client';
 
-import { userController } from "./user.controller";
-import { validateRequest } from "../../middlewares/validateRequest";
-import { userValidationSchema } from "./user.validationSchema";
+import { userController } from './user.controller';
+import { validateRequest } from '../../middlewares/validateRequest';
+import { userValidationSchema } from './user.validationSchema';
 
 const router = express.Router();
 router.get(
-  "/",
+  '/',
   authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  userController.getAllUsers
+  userController.getAllUsers,
 );
 router.get(
-  "/me",
+  '/me',
   authGuard(
     UserRole.ADMIN,
     UserRole.BLOGGER,
     UserRole.MODERATOR,
-    UserRole.SUPER_ADMIN
+    UserRole.SUPER_ADMIN,
   ),
-  userController.getMyProfile
+  userController.getMyProfile,
 );
 
 router.patch(
-  "/update-my-profile",
+  '/update-my-profile',
   authGuard(
     UserRole.ADMIN,
     UserRole.BLOGGER,
     UserRole.MODERATOR,
-    UserRole.SUPER_ADMIN
+    UserRole.SUPER_ADMIN,
   ),
-  userController.updateMyProfile
+  userController.updateMyProfile,
 );
 router.patch(
-  "/:id/status",
+  '/:id/status',
   authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   validateRequest(userValidationSchema.userUpdateStatus),
-  userController.changeProfileStatus
+  userController.changeProfileStatus,
 );
 
 router.post(
-  "/create-admin",
+  '/create-admin',
   authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   validateRequest(userValidationSchema.createAdminSchema),
-  userController.createAdmin
+  userController.createAdmin,
 );
 
 router.post(
-  "/create-author",
+  '/create-author',
   //  authGuard(UserRole.ADMIN,UserRole.SUPER_ADMIN),validateRequest(userValidationSchema.createAuthorSchema),
-  userController.createAuthor
+  userController.createAuthor,
 );
 router.post(
-  "/create-moderator",
+  '/create-moderator',
 
   // authGuard(UserRole.ADMIN,UserRole.SUPER_ADMIN),
 
   validateRequest(userValidationSchema.createModaratorSchema),
-  userController.createModarator
+  userController.createModarator,
 );
-router.post("/create-subscriber", userController.createSubscriber);
+router.post('/create-subscriber', userController.createSubscriber);
 
 export const userRoutes = router;

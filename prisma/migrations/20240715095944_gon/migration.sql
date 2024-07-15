@@ -102,6 +102,7 @@ CREATE TABLE "blogs" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "content" TEXT NOT NULL,
+    "votes" INTEGER DEFAULT 0,
     "category" TEXT,
     "image" TEXT,
     "conclusion" TEXT NOT NULL,
@@ -114,6 +115,18 @@ CREATE TABLE "blogs" (
     "views" INTEGER DEFAULT 0,
 
     CONSTRAINT "blogs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "tags" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "blogId" TEXT NOT NULL,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "tags_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -155,6 +168,9 @@ CREATE UNIQUE INDEX "authors_email_key" ON "authors"("email");
 -- CreateIndex
 CREATE UNIQUE INDEX "moderators_email_key" ON "moderators"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "tags_name_key" ON "tags"("name");
+
 -- AddForeignKey
 ALTER TABLE "admins" ADD CONSTRAINT "admins_email_fkey" FOREIGN KEY ("email") REFERENCES "users"("email") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -169,6 +185,9 @@ ALTER TABLE "moderators" ADD CONSTRAINT "moderators_email_fkey" FOREIGN KEY ("em
 
 -- AddForeignKey
 ALTER TABLE "blogs" ADD CONSTRAINT "blogs_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "authors"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "tags" ADD CONSTRAINT "tags_blogId_fkey" FOREIGN KEY ("blogId") REFERENCES "blogs"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "comments" ADD CONSTRAINT "comments_commentorId_fkey" FOREIGN KEY ("commentorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

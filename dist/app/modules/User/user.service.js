@@ -41,7 +41,7 @@ const createAdmin = (payload) => __awaiter(void 0, void 0, void 0, function* () 
                 password: hashPassword,
                 role: client_1.UserRole.ADMIN,
                 name: admin.name,
-                profilePhoto: admin.profilePhoto
+                profilePhoto: admin.profilePhoto,
             },
         });
         console.log({ newUser });
@@ -62,7 +62,7 @@ const createAuthor = (payload) => __awaiter(void 0, void 0, void 0, function* ()
                 password: hashPassword,
                 role: client_1.UserRole.BLOGGER,
                 name: author.name,
-                profilePhoto: author.profilePhoto
+                profilePhoto: author.profilePhoto,
             },
         });
         const newAuthor = yield transactionClient.author.create({
@@ -82,7 +82,7 @@ const createModarator = (payload) => __awaiter(void 0, void 0, void 0, function*
                 password: hashPassword,
                 role: client_1.UserRole.MODERATOR,
                 name: modarator.name,
-                profilePhoto: modarator.profilePhoto
+                profilePhoto: modarator.profilePhoto,
             },
         });
         const newModarator = yield transactionClient.moderator.create({
@@ -96,8 +96,8 @@ const createSubscriber = (payload) => __awaiter(void 0, void 0, void 0, function
     const { password } = payload, subscriber = __rest(payload, ["password"]);
     const isExist = yield prismaClient_1.default.user.findUnique({
         where: {
-            email: subscriber.email
-        }
+            email: subscriber.email,
+        },
     });
     if (isExist) {
         throw new HTTPError_1.HTTPError(http_status_1.default.BAD_REQUEST, 'The email already register');
@@ -110,7 +110,7 @@ const createSubscriber = (payload) => __awaiter(void 0, void 0, void 0, function
                 email: subscriber.email,
                 password: hashPassword,
                 role: client_1.UserRole.SUBSCRIBER,
-                profilePhoto: subscriber.profilePhoto
+                profilePhoto: subscriber.profilePhoto,
             },
         });
         console.log({ userCreate });
@@ -128,7 +128,7 @@ const getAllUsersFromDb = (queryParams, paginationAndSortingQueryParams, user) =
     const conditions = [];
     if (q) {
         const searchConditions = user_constant_1.userSearchableFields.map((field) => ({
-            [field]: { contains: q, mode: "insensitive" },
+            [field]: { contains: q, mode: 'insensitive' },
         }));
         conditions.push({ OR: searchConditions });
     }
@@ -173,7 +173,8 @@ const getMyProfile = (authUser) => __awaiter(void 0, void 0, void 0, function* (
         },
     });
     let profileData;
-    if ((userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.ADMIN || (userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.SUPER_ADMIN) {
+    if ((userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.ADMIN ||
+        (userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.SUPER_ADMIN) {
         profileData = yield prismaClient_1.default.admin.findUnique({
             where: {
                 email: userData.email,
@@ -206,25 +207,26 @@ const updateMyProfile = (authUser, payload) => __awaiter(void 0, void 0, void 0,
     if (payload.profilePhoto) {
         yield prismaClient_1.default.user.update({
             where: {
-                email: authUser.email
+                email: authUser.email,
             },
             data: {
-                profilePhoto: payload.profilePhoto
-            }
+                profilePhoto: payload.profilePhoto,
+            },
         });
     }
     if (payload.name) {
         yield prismaClient_1.default.user.update({
             where: {
-                email: authUser.email
+                email: authUser.email,
             },
             data: {
-                name: payload.name
-            }
+                name: payload.name,
+            },
         });
     }
     let profileData;
-    if ((userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.ADMIN || (userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.SUPER_ADMIN) {
+    if ((userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.ADMIN ||
+        (userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.SUPER_ADMIN) {
         profileData = yield prismaClient_1.default.admin.update({
             where: {
                 email: userData.email,
@@ -257,7 +259,7 @@ const changeProfileStatus = (userId, status) => __awaiter(void 0, void 0, void 0
         },
     });
     if (!isUserExist) {
-        throw new HTTPError_1.HTTPError(http_status_1.default.BAD_REQUEST, "User does not exists!");
+        throw new HTTPError_1.HTTPError(http_status_1.default.BAD_REQUEST, 'User does not exists!');
     }
     const updatedUser = yield prismaClient_1.default.user.update({
         where: {

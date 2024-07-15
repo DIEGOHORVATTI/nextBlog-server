@@ -1,32 +1,32 @@
-import { Admin, Prisma, UserRole, UserStatus } from "@prisma/client";
+import { Admin, Prisma, UserRole, UserStatus } from '@prisma/client';
 
-import prisma from "../../../shared/prismaClient";
+import prisma from '../../../shared/prismaClient';
 
-import { hashedPassword } from "./user.utils";
+import { hashedPassword } from './user.utils';
 
-import { userSearchableFields } from "./user.constant";
-import { generatePaginateAndSortOptions } from "../../../helpers/paginationHelpers";
+import { userSearchableFields } from './user.constant';
+import { generatePaginateAndSortOptions } from '../../../helpers/paginationHelpers';
 import {
   IPaginationParams,
   ISortingParams,
-} from "../../interfaces/paginationSorting";
-import { IUserFilterParams } from "./user.interface";
-import { HTTPError } from "../../errors/HTTPError";
-import httpStatus from "http-status";
+} from '../../interfaces/paginationSorting';
+import { IUserFilterParams } from './user.interface';
+import { HTTPError } from '../../errors/HTTPError';
+import httpStatus from 'http-status';
 
 const createAdmin = async (payload: any) => {
   const { password, ...admin } = payload;
 
   const hashPassword = await hashedPassword(password);
 
-  const result = await prisma.$transaction(async (transactionClient:any) => {
+  const result = await prisma.$transaction(async (transactionClient: any) => {
     const newUser = await transactionClient.user.create({
       data: {
         email: admin.email,
         password: hashPassword,
         role: UserRole.ADMIN,
-        name:admin.name,
-        profilePhoto:admin.profilePhoto
+        name: admin.name,
+        profilePhoto: admin.profilePhoto,
       },
     });
     console.log({ newUser });
@@ -44,14 +44,14 @@ const createAuthor = async (payload: any) => {
 
   const hashPassword = await hashedPassword(password);
 
-  const result = await prisma.$transaction(async (transactionClient:any) => {
+  const result = await prisma.$transaction(async (transactionClient: any) => {
     const newUser = await transactionClient.user.create({
       data: {
         email: author.email,
         password: hashPassword,
         role: UserRole.BLOGGER,
-        name:author.name,
-        profilePhoto:author.profilePhoto
+        name: author.name,
+        profilePhoto: author.profilePhoto,
       },
     });
 
@@ -69,14 +69,14 @@ const createModarator = async (payload: any) => {
 
   const hashPassword = await hashedPassword(password);
 
-  const result = await prisma.$transaction(async (transactionClient:any) => {
+  const result = await prisma.$transaction(async (transactionClient: any) => {
     await transactionClient.user.create({
       data: {
         email: modarator.email,
         password: hashPassword,
         role: UserRole.MODERATOR,
-        name:modarator.name,
-        profilePhoto:modarator.profilePhoto
+        name: modarator.name,
+        profilePhoto: modarator.profilePhoto,
       },
     });
 
@@ -93,26 +93,25 @@ const createSubscriber = async (payload: any) => {
   const { password, ...subscriber } = payload;
 
   const isExist = await prisma.user.findUnique({
-    where:{
-      email:subscriber.email
-    }
-  })
+    where: {
+      email: subscriber.email,
+    },
+  });
 
-  if(isExist){
-    throw new HTTPError(httpStatus.BAD_REQUEST,'The email already register')
+  if (isExist) {
+    throw new HTTPError(httpStatus.BAD_REQUEST, 'The email already register');
   }
 
   const hashPassword = await hashedPassword(password);
- 
 
-  const result = await prisma.$transaction(async (transactionClient:any) => {
+  const result = await prisma.$transaction(async (transactionClient: any) => {
     const userCreate = await transactionClient.user.create({
       data: {
         name: subscriber.name,
         email: subscriber.email,
         password: hashPassword,
         role: UserRole.SUBSCRIBER,
-        profilePhoto:subscriber.profilePhoto
+        profilePhoto: subscriber.profilePhoto,
       },
     });
 
@@ -131,7 +130,7 @@ const createSubscriber = async (payload: any) => {
 const getAllUsersFromDb = async (
   queryParams: IUserFilterParams,
   paginationAndSortingQueryParams: IPaginationParams & ISortingParams,
-  user: any
+  user: any,
 ) => {
   console.log(user);
   const { q, ...otherQueryParams } = queryParams;
@@ -143,10 +142,9 @@ const getAllUsersFromDb = async (
 
   const conditions: Prisma.UserWhereInput[] = [];
 
- 
   if (q) {
     const searchConditions = userSearchableFields.map((field) => ({
-      [field]: { contains: q, mode: "insensitive" },
+      [field]: { contains: q, mode: 'insensitive' },
     }));
     conditions.push({ OR: searchConditions });
   }
@@ -197,7 +195,10 @@ const getMyProfile = async (authUser: any) => {
   });
 
   let profileData;
-  if (userData?.role === UserRole.ADMIN || userData?.role === UserRole.SUPER_ADMIN) {
+  if (
+    userData?.role === UserRole.ADMIN ||
+    userData?.role === UserRole.SUPER_ADMIN
+  ) {
     profileData = await prisma.admin.findUnique({
       where: {
         email: userData.email,
@@ -227,29 +228,32 @@ const updateMyProfile = async (authUser: any, payload: any) => {
     },
   });
 
-  if(payload.profilePhoto){
+  if (payload.profilePhoto) {
     await prisma.user.update({
-      where:{
-        email:authUser.email
+      where: {
+        email: authUser.email,
       },
-      data:{
-        profilePhoto:payload.profilePhoto
-      }
-    })
+      data: {
+        profilePhoto: payload.profilePhoto,
+      },
+    });
   }
-  if(payload.name){
+  if (payload.name) {
     await prisma.user.update({
-      where:{
-        email:authUser.email
+      where: {
+        email: authUser.email,
       },
-      data:{
-        name:payload.name
-      }
-    })
+      data: {
+        name: payload.name,
+      },
+    });
   }
 
   let profileData;
-  if (userData?.role === UserRole.ADMIN || userData?.role === UserRole.SUPER_ADMIN) {
+  if (
+    userData?.role === UserRole.ADMIN ||
+    userData?.role === UserRole.SUPER_ADMIN
+  ) {
     profileData = await prisma.admin.update({
       where: {
         email: userData.email,
@@ -281,14 +285,14 @@ const changeProfileStatus = async (userId: string, status: UserStatus) => {
     },
   });
   if (!isUserExist) {
-    throw new HTTPError(httpStatus.BAD_REQUEST, "User does not exists!");
+    throw new HTTPError(httpStatus.BAD_REQUEST, 'User does not exists!');
   }
 
   const updatedUser = await prisma.user.update({
     where: {
       id: userId,
     },
-    data:status,
+    data: status,
   });
 
   return updatedUser;

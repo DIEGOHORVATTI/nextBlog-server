@@ -28,5 +28,5 @@ const fetchDashboardMetadata = (0, catchAsync_1.default)((req, res) => __awaiter
     });
 }));
 exports.MetaController = {
-    fetchDashboardMetadata
+    fetchDashboardMetadata,
 };

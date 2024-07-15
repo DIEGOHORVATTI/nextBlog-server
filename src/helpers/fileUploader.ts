@@ -99,11 +99,11 @@
 //   uploadToCloudinary,
 // };
 
-import { v2 as cloudinary } from "cloudinary";
-import multer from "multer";
-import * as fs from "fs";
-import config from "../config/config";
-import { ICloudinaryResponse, IUploadFile } from "../app/interfaces/file";
+import { v2 as cloudinary } from 'cloudinary';
+import multer from 'multer';
+import * as fs from 'fs';
+import config from '../config/config';
+import { ICloudinaryResponse, IUploadFile } from '../app/interfaces/file';
 
 cloudinary.config({
   cloud_name: config.cloudinary.cloud_name,
@@ -113,7 +113,7 @@ cloudinary.config({
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/");
+    cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -123,7 +123,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const uploadToCloudinary = async (
-  file: IUploadFile
+  file: IUploadFile,
 ): Promise<ICloudinaryResponse | undefined> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
@@ -135,7 +135,7 @@ const uploadToCloudinary = async (
         } else {
           resolve(result);
         }
-      }
+      },
     );
   });
 };

@@ -16,7 +16,7 @@ const createAuthorSchema = zod_1.z.object({
         email: zod_1.z.string().email(),
         name: zod_1.z.string(),
         contactNumber: zod_1.z.string(),
-        gender: zod_1.z.enum(["MALE", "FEMALE"]),
+        gender: zod_1.z.enum(['MALE', 'FEMALE']),
     }),
 });
 const createModaratorSchema = zod_1.z.object({
@@ -25,17 +25,17 @@ const createModaratorSchema = zod_1.z.object({
         email: zod_1.z.string().email(),
         name: zod_1.z.string(),
         contactNumber: zod_1.z.string(),
-        gender: zod_1.z.enum(["MALE", "FEMALE"]),
+        gender: zod_1.z.enum(['MALE', 'FEMALE']),
     }),
 });
 const userUpdateStatus = zod_1.z.object({
     body: zod_1.z.object({
-        status: zod_1.z.enum(["ACTIVE", "BLOCKED", "DELETED"]),
+        status: zod_1.z.enum(['ACTIVE', 'BLOCKED', 'DELETED']),
     }),
 });
 exports.userValidationSchema = {
     createAdminSchema,
     userUpdateStatus,
     createAuthorSchema,
-    createModaratorSchema
+    createModaratorSchema,
 };

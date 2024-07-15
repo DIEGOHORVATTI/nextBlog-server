@@ -1,18 +1,18 @@
-import { Moderator, Prisma, User, UserStatus } from "@prisma/client";
-import prisma from "../../../shared/prismaClient";
+import { Moderator, Prisma, User, UserStatus } from '@prisma/client';
+import prisma from '../../../shared/prismaClient';
 import {
   IPaginationParams,
   ISortingParams,
-} from "../../interfaces/paginationSorting";
+} from '../../interfaces/paginationSorting';
 
-import { generatePaginateAndSortOptions } from "../../../helpers/paginationHelpers";
+import { generatePaginateAndSortOptions } from '../../../helpers/paginationHelpers';
 
-import { IUserFilterParams } from "../User/user.interface";
-import { moderatorSearchableFields } from "./moderator.constant";
+import { IUserFilterParams } from '../User/user.interface';
+import { moderatorSearchableFields } from './moderator.constant';
 
 const getAllModeratorFomDB = async (
   queryParams: IUserFilterParams,
-  paginationAndSortingQueryParams: IPaginationParams & ISortingParams
+  paginationAndSortingQueryParams: IPaginationParams & ISortingParams,
 ) => {
   const { q, ...otherQueryParams } = queryParams;
 
@@ -31,7 +31,7 @@ const getAllModeratorFomDB = async (
   //@ searching
   if (q) {
     const searchConditions = moderatorSearchableFields.map((field) => ({
-      [field]: { contains: q, mode: "insensitive" },
+      [field]: { contains: q, mode: 'insensitive' },
     }));
     conditions.push({ OR: searchConditions });
   }
@@ -77,67 +77,61 @@ const getSingleModeratorFromDB = async (id: string) => {
 };
 
 const updateModeratorIntoDB = async (
-   id: string,
-   data: Partial<Moderator>
- ): Promise<Moderator> => {
-   const moderatorData = await prisma.moderator.findUniqueOrThrow({
-     where: {
-       id,
-       isDeleted: false,
-     },
-   });
+  id: string,
+  data: Partial<Moderator>,
+): Promise<Moderator> => {
+  const moderatorData = await prisma.moderator.findUniqueOrThrow({
+    where: {
+      id,
+      isDeleted: false,
+    },
+  });
 
-
-   if(data.name){
+  if (data.name) {
     await prisma.user.update({
-       where:{
-          email:moderatorData.email
-       },
-       data:{
-          name:data.name
-       }
-    })
- }
- if(data.profilePhoto){
+      where: {
+        email: moderatorData.email,
+      },
+      data: {
+        name: data.name,
+      },
+    });
+  }
+  if (data.profilePhoto) {
     await prisma.user.update({
-       where:{
-          email:moderatorData.email
-       },
-       data:{
-          profilePhoto:data.profilePhoto
-       }
-    })
- }
- 
-   const result = await prisma.$transaction(async (tx) => {
-     const updatedModerator = await tx.moderator.update({
-       where: {
-         id,
-       },
-       data,
-     });
- 
-     if (data.profilePhoto) {
-       await tx.user.update({
-         where: {
-           email: moderatorData.email,
-         },
-         data: {
-           profilePhoto: data.profilePhoto,
-         },
-       });
-     }
- 
-     return updatedModerator;
-   });
- 
-   return result;
- };
- 
+      where: {
+        email: moderatorData.email,
+      },
+      data: {
+        profilePhoto: data.profilePhoto,
+      },
+    });
+  }
 
+  const result = await prisma.$transaction(async (tx) => {
+    const updatedModerator = await tx.moderator.update({
+      where: {
+        id,
+      },
+      data,
+    });
 
- 
+    if (data.profilePhoto) {
+      await tx.user.update({
+        where: {
+          email: moderatorData.email,
+        },
+        data: {
+          profilePhoto: data.profilePhoto,
+        },
+      });
+    }
 
+    return updatedModerator;
+  });
+
+  return result;
+};
 
 const deleteModeratorFromDB = async (id: string): Promise<Moderator> => {
   await prisma.moderator.findUniqueOrThrow({
@@ -165,7 +159,7 @@ const deleteModeratorFromDB = async (id: string): Promise<Moderator> => {
 };
 
 const softDeleteModeratorFromDB = async (
-  id: string
+  id: string,
 ): Promise<Moderator | null> => {
   await prisma.moderator.findUniqueOrThrow({
     where: {

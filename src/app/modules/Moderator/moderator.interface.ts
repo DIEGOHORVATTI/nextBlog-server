@@ -1,4 +1,4 @@
 export type IModeratorFilterParams = {
-    q?: string | undefined;
-    email?: string | undefined;
- };
+  q?: string | undefined;
+  email?: string | undefined;
+};

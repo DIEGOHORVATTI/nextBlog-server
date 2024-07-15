@@ -4,17 +4,17 @@ import {
   Published_status,
   UserRole,
   Visibility,
-} from "@prisma/client";
-import prisma from "../../../shared/prismaClient";
-import { IBlogFilterParams } from "./blog.interface";
+} from '@prisma/client';
+import prisma from '../../../shared/prismaClient';
+import { IBlogFilterParams } from './blog.interface';
 import {
   IPaginationParams,
   ISortingParams,
-} from "../../interfaces/paginationSorting";
-import { generatePaginateAndSortOptions } from "../../../helpers/paginationHelpers";
-import { blogSearchableFields } from "./blog.constant";
-import { HTTPError } from "../../errors/HTTPError";
-import httpStatus from "http-status";
+} from '../../interfaces/paginationSorting';
+import { generatePaginateAndSortOptions } from '../../../helpers/paginationHelpers';
+import { blogSearchableFields } from './blog.constant';
+import { HTTPError } from '../../errors/HTTPError';
+import httpStatus from 'http-status';
 
 const craeteBlogIntoDb = async (payload: Blog, user: any) => {
   console.log({ user });
@@ -30,18 +30,78 @@ const craeteBlogIntoDb = async (payload: Blog, user: any) => {
   return result;
 };
 
+// const getAllBlogFomDB = async (
+//   queryParams: IBlogFilterParams,
+//   paginationAndSortingQueryParams: IPaginationParams & ISortingParams
+// ) => {
+//   const { q, ...otherQueryParams } = queryParams;
+
+//   const { limit, skip, page, sortBy, sortOrder } =
+//     generatePaginateAndSortOptions({
+//       ...paginationAndSortingQueryParams,
+//     });
+
+//   //  const conditions: Prisma.BlogWhereInput[] = [];
+//   const conditions: Prisma.BlogWhereInput[] = [];
+
+//   // filtering out the soft deleted users
+//   conditions.push({
+//     visibility: Visibility.PUBLIC,
+//   });
+
+//   //@ searching
+//   if (q) {
+//     const searchConditions = blogSearchableFields.map((field) => ({
+//       [field]: { contains: q, mode: "insensitive" },
+//     }));
+//     conditions.push({ OR: searchConditions });
+//   }
+
+//   //@ filtering with exact value
+//   if (Object.keys(otherQueryParams).length > 0) {
+//     const filterData = Object.keys(otherQueryParams).map((key) => ({
+//       [key]: (otherQueryParams as any)[key],
+//     }));
+//     conditions.push(...filterData);
+//   }
+
+//   const result = await prisma.blog.findMany({
+//     where: { AND: conditions },
+//     skip,
+//     take: limit,
+//     orderBy: {
+//       [sortBy]: sortOrder,
+//     },
+//     include: {
+//       author: true,
+//     },
+//   });
+
+//   const total = await prisma.blog.count({
+//     where: { AND: conditions },
+//   });
+
+//   return {
+//     meta: {
+//       page,
+//       limit,
+//       total,
+//     },
+//     result,
+//   };
+// };
+
 const getAllBlogFomDB = async (
   queryParams: IBlogFilterParams,
-  paginationAndSortingQueryParams: IPaginationParams & ISortingParams
+  paginationAndSortingQueryParams: IPaginationParams & ISortingParams,
 ) => {
-  const { q, ...otherQueryParams } = queryParams;
+  const { q, tag, ...otherQueryParams } = queryParams; // Destructure tag from queryParams
 
   const { limit, skip, page, sortBy, sortOrder } =
     generatePaginateAndSortOptions({
       ...paginationAndSortingQueryParams,
     });
 
-  //  const conditions: Prisma.BlogWhereInput[] = [];
   const conditions: Prisma.BlogWhereInput[] = [];
 
   // filtering out the soft deleted users
@@ -49,20 +109,34 @@ const getAllBlogFomDB = async (
     visibility: Visibility.PUBLIC,
   });
 
-  //@ searching
+  // Searching
   if (q) {
     const searchConditions = blogSearchableFields.map((field) => ({
-      [field]: { contains: q, mode: "insensitive" },
+      [field]: { contains: q, mode: 'insensitive' },
     }));
     conditions.push({ OR: searchConditions });
   }
 
-  //@ filtering with exact value
+  // Filtering with exact value
   if (Object.keys(otherQueryParams).length > 0) {
     const filterData = Object.keys(otherQueryParams).map((key) => ({
       [key]: (otherQueryParams as any)[key],
     }));
     conditions.push(...filterData);
+  }
+
+  // Filtering by tag name
+  if (tag) {
+    conditions.push({
+      tag: {
+        some: {
+          name: {
+            contains: tag,
+            mode: 'insensitive',
+          },
+        },
+      },
+    });
   }
 
   const result = await prisma.blog.findMany({
@@ -74,6 +148,7 @@ const getAllBlogFomDB = async (
     },
     include: {
       author: true,
+      tag: true, // Include tags in the result
     },
   });
 
@@ -103,7 +178,7 @@ const getSingleBlogFromDB = async (id: string, user: any) => {
       include: {
         author: true,
         comment: true,
-        tag:true
+        tag: true,
       },
     });
 
@@ -128,7 +203,7 @@ const getSingleBlogFromDB = async (id: string, user: any) => {
 const getMyAllBlogsFomDB = async (
   queryParams: IBlogFilterParams,
   paginationAndSortingQueryParams: IPaginationParams & ISortingParams,
-  user: any
+  user: any,
 ) => {
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
@@ -160,7 +235,7 @@ const getMyAllBlogsFomDB = async (
   //@ searching
   if (q) {
     const searchConditions = blogSearchableFields.map((field) => ({
-      [field]: { contains: q, mode: "insensitive" },
+      [field]: { contains: q, mode: 'insensitive' },
     }));
     conditions.push({ OR: searchConditions });
   }
@@ -231,7 +306,7 @@ const deleteBlogFromDB = async (id: string) => {
 
 const updateBlogIntoDB = async (
   id: string,
-  data: Partial<Blog>
+  data: Partial<Blog>,
 ): Promise<Blog> => {
   await prisma.blog.findUniqueOrThrow({
     where: {
@@ -249,7 +324,7 @@ const updateBlogIntoDB = async (
 };
 const changeApprovalStatusDB = async (
   id: string,
-  data: Partial<Blog>
+  data: Partial<Blog>,
 ): Promise<Blog> => {
   await prisma.blog.findUniqueOrThrow({
     where: {
@@ -267,7 +342,7 @@ const changeApprovalStatusDB = async (
   if (isCancel) {
     throw new HTTPError(
       httpStatus.BAD_REQUEST,
-      "Can not updated its status is cancel"
+      'Can not updated its status is cancel',
     );
   }
 
@@ -300,21 +375,21 @@ const countVote = async (id: any, action: string) => {
 
   // Throw an error if the blog post is not found
   if (!blog) {
-    throw new Error("Blog not found");
+    throw new Error('Blog not found');
   }
 
   // Check if blog.votes is not null before updating
   if (blog.votes !== null) {
     // Update the votes based on the action
-    if (action === "upvote") {
+    if (action === 'upvote') {
       blog.votes += 1;
-    } else if (action === "downvote") {
+    } else if (action === 'downvote') {
       blog.votes -= 1;
     } else {
-      throw new Error("Invalid action");
+      throw new Error('Invalid action');
     }
   } else {
-    throw new Error("Votes cannot be null");
+    throw new Error('Votes cannot be null');
   }
 
   // Save the updated blog post with the new vote count

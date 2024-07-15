@@ -25,7 +25,7 @@ const createAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Admin created successfully!",
+        message: 'Admin created successfully!',
         data: result,
     });
 }));
@@ -34,7 +34,7 @@ const createAuthor = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Author created successfully!",
+        message: 'Author created successfully!',
         data: result,
     });
 }));
@@ -43,7 +43,7 @@ const createModarator = (0, catchAsync_1.default)((req, res) => __awaiter(void 0
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Modarator created successfully!",
+        message: 'Modarator created successfully!',
         data: result,
     });
 }));
@@ -52,7 +52,7 @@ const createSubscriber = (0, catchAsync_1.default)((req, res) => __awaiter(void 
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Subscriber created successfully!",
+        message: 'Subscriber created successfully!',
         data: result,
     });
 }));
@@ -64,7 +64,7 @@ const getAllUsers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Users data fetched!",
+        message: 'Users data fetched!',
         meta: result.meta,
         data: result.result,
     });
@@ -76,7 +76,7 @@ const getMyProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         statusCode: http_status_1.default.OK,
         success: true,
         message: 'Profile data fetched!',
-        data: result
+        data: result,
     });
 }));
 const updateMyProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -87,7 +87,7 @@ const updateMyProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0
         statusCode: http_status_1.default.OK,
         success: true,
         message: 'Profile updated successfully!!',
-        data: result
+        data: result,
     });
 }));
 const changeProfileStatus = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -108,5 +108,5 @@ exports.userController = {
     getAllUsers,
     getMyProfile,
     updateMyProfile,
-    changeProfileStatus
+    changeProfileStatus,
 };

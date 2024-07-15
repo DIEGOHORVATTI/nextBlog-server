@@ -1,31 +1,30 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { NextFunction, Request, Response } from 'express';
 
-import { validateRequest } from "../../middlewares/validateRequest";
+import { validateRequest } from '../../middlewares/validateRequest';
 
-import authGuard from "../../middlewares/authGuard";
-import { UserRole } from "@prisma/client";
-import { ModeratorController } from "./moderator.controller";
-import { moderatorValidationSchemas } from "./moderator.validation";
-
+import authGuard from '../../middlewares/authGuard';
+import { UserRole } from '@prisma/client';
+import { ModeratorController } from './moderator.controller';
+import { moderatorValidationSchemas } from './moderator.validation';
 
 const router = express.Router();
 
 router.get(
-  "/",
+  '/',
   authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  ModeratorController.getAllModerator
+  ModeratorController.getAllModerator,
 );
 
-router.get("/:id", ModeratorController.getSingleModerator);
+router.get('/:id', ModeratorController.getSingleModerator);
 
 router.patch(
-  "/:id",
+  '/:id',
   validateRequest(moderatorValidationSchemas.updateModeratorSchema),
-  ModeratorController.updateModerator
+  ModeratorController.updateModerator,
 );
 
-router.delete("/:id", ModeratorController.deleteModerator);
+router.delete('/:id', ModeratorController.deleteModerator);
 
-router.delete("/soft/:id", ModeratorController.softDeleteModerator);
+router.delete('/soft/:id', ModeratorController.softDeleteModerator);
 
 export const ModeratorRoutes = router;

@@ -23,7 +23,7 @@ const createComment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Comment created successfully!",
+        message: 'Comment created successfully!',
         data: result,
     });
 }));
@@ -36,7 +36,7 @@ const updateMyComment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Comment updated successfully!",
+        message: 'Comment updated successfully!',
         data: result,
     });
 }));
@@ -47,7 +47,7 @@ const deleteComment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Delete comment  successfully!",
+        message: 'Delete comment  successfully!',
         data: result,
     });
 }));
@@ -58,7 +58,7 @@ const getSingleComment = (0, catchAsync_1.default)((req, res) => __awaiter(void 
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Comment fetched  successfully!",
+        message: 'Comment fetched  successfully!',
         data: result,
     });
 }));
@@ -68,10 +68,14 @@ const getAllComments = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Comments fetched successfully!",
+        message: 'Comments fetched successfully!',
         data: result,
     });
 }));
 exports.CommentControllers = {
-    createComment, updateMyComment, deleteComment, getAllComments, getSingleComment
+    createComment,
+    updateMyComment,
+    deleteComment,
+    getAllComments,
+    getSingleComment,
 };

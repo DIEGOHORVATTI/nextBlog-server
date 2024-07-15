@@ -18,7 +18,7 @@ const createCommentIntoDB = (user, payload) => __awaiter(void 0, void 0, void 0,
     console.log(user);
     const userData = yield prismaClient_1.default.user.findUniqueOrThrow({
         where: {
-            email: user === null || user === void 0 ? void 0 : user.email
+            email: user === null || user === void 0 ? void 0 : user.email,
         },
     });
     const blogData = yield prismaClient_1.default.blog.findUniqueOrThrow({
@@ -49,25 +49,25 @@ const updateCommentIntoDb = (id, payload, user) => __awaiter(void 0, void 0, voi
         where: {
             id,
         },
-        data: payload
+        data: payload,
     });
     return result;
 });
 const deleteCommentFromDB = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
     yield prismaClient_1.default.user.findUniqueOrThrow({
         where: {
-            email: user.email
-        }
+            email: user.email,
+        },
     });
     yield prismaClient_1.default.comment.findUniqueOrThrow({
         where: {
-            id
-        }
+            id,
+        },
     });
     const result = yield prismaClient_1.default.comment.delete({
         where: {
-            id
-        }
+            id,
+        },
     });
     console.log(result);
     return result;
@@ -75,33 +75,33 @@ const deleteCommentFromDB = (id, user) => __awaiter(void 0, void 0, void 0, func
 const getAllCommentsFromDB = (blogId) => __awaiter(void 0, void 0, void 0, function* () {
     yield prismaClient_1.default.blog.findUniqueOrThrow({
         where: {
-            id: blogId
-        }
+            id: blogId,
+        },
     });
     const result = yield prismaClient_1.default.comment.findMany({
         where: {
-            blogId: blogId
+            blogId: blogId,
         },
         include: {
             comment: true,
         },
         orderBy: {
-            createdAt: 'asc'
-        }
+            createdAt: 'asc',
+        },
     });
     return result;
 });
 const getSingleCommentFromDB = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
     yield prismaClient_1.default.user.findUniqueOrThrow({
         where: {
-            email: user.email
-        }
+            email: user.email,
+        },
     });
     const result = yield prismaClient_1.default.comment.findFirstOrThrow({
         where: {
             id,
-            commentorId: user.id
-        }
+            commentorId: user.id,
+        },
     });
     return result;
 });
@@ -110,5 +110,5 @@ exports.CommentServices = {
     updateCommentIntoDb,
     deleteCommentFromDB,
     getAllCommentsFromDB,
-    getSingleCommentFromDB
+    getSingleCommentFromDB,
 };

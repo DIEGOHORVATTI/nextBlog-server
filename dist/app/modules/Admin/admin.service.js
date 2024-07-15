@@ -88,11 +88,11 @@ const updateAdminIntoDB = (id, data) => __awaiter(void 0, void 0, void 0, functi
     if (data.name) {
         yield prismaClient_1.default.user.update({
             where: {
-                email: adminData.email
+                email: adminData.email,
             },
             data: {
-                name: data.name
-            }
+                name: data.name,
+            },
         });
     }
     return yield prismaClient_1.default.admin.update({

@@ -1,6 +1,6 @@
 export const paginationAndSortingParams = [
-   'page',
-   'limit',
-   'sortBy',
-   'sortOrder',
+  'page',
+  'limit',
+  'sortBy',
+  'sortOrder',
 ];

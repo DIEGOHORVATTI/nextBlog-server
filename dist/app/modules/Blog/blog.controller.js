@@ -28,7 +28,7 @@ const createBlog = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.CREATED,
         success: true,
-        message: "Blog Created Successfully!",
+        message: 'Blog Created Successfully!',
         data: result,
     });
 }));
@@ -39,7 +39,7 @@ const getAllBlogs = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Blog data fetched successfully!",
+        message: 'Blog data fetched successfully!',
         meta: result.meta,
         data: result.result,
     });
@@ -51,7 +51,7 @@ const getSingleBlog = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Blog data fetched successfully!",
+        message: 'Blog data fetched successfully!',
         data: result,
     });
 }));
@@ -64,7 +64,7 @@ const getMyAllBlogs = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "My blogs data fetched successfully!",
+        message: 'My blogs data fetched successfully!',
         meta: result.meta,
         data: result.result,
     });
@@ -75,7 +75,7 @@ const deleteBlog = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Blog data deleted successfully!",
+        message: 'Blog data deleted successfully!',
         data: result,
     });
 }));
@@ -85,7 +85,7 @@ const updateBlog = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Blog data updated successfully!",
+        message: 'Blog data updated successfully!',
         data: result,
     });
 }));
@@ -95,7 +95,7 @@ const changeApprovalStatusBlog = (0, catchAsync_1.default)((req, res) => __await
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Approval status  updated successfully!",
+        message: 'Approval status  updated successfully!',
         data: result,
     });
 }));
@@ -105,7 +105,19 @@ const getSingleBlogBYModerator = (0, catchAsync_1.default)((req, res) => __await
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Blog fetched successfully!",
+        message: 'Blog fetched successfully!',
+        data: result,
+    });
+}));
+const voteCount = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const { action } = req.body;
+    console.log(id, action);
+    const result = yield blog_service_1.blogServicres.countVote(id, action);
+    (0, sendResponse_1.sendResponse)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'voting updated successfully',
         data: result,
     });
 }));
@@ -117,5 +129,6 @@ exports.blogController = {
     deleteBlog,
     updateBlog,
     changeApprovalStatusBlog,
-    getSingleBlogBYModerator
+    getSingleBlogBYModerator,
+    voteCount,
 };

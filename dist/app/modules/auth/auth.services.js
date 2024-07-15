@@ -46,18 +46,92 @@ const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const HTTPError_1 = require("../../errors/HTTPError");
 const http_status_1 = __importDefault(require("http-status"));
+// const loginUser = async (payload: { email: string; password: string }) => {
+//   console.log(payload);
+//   // const userData = await prisma.user.findUniqueOrThrow({
+//   //   where: {
+//   //     email: payload.email,
+//   //     status: UserStatus.ACTIVE,
+//   //   },
+//   // });
+//   const userData = await prisma.user.findUnique({
+//     where: {
+//       email: payload.email,
+//       status:UserStatus.ACTIVE
+//     },
+//   });
+//   if(!userData){
+//     throw new HTTPError(httpStatus.BAD_REQUEST,'Email is not valid')
+//   }
+//   const isCorrectPassword: boolean = await bcrypt.compare(
+//     payload.password,
+//     userData.password
+//   );
+//   if (!isCorrectPassword) {
+//     throw new Error("Password is incorrect!");
+//   }
+//   const accessToken = jwtHelpers.generateToken(
+//     {
+//       userId: userData.id,
+//       name: userData.name,
+//       email: userData.email,
+//       role: userData.role,
+//       profilePhoto: userData.profilePhoto,
+//     },
+//     config.jwt.jwt_secret as Secret,
+//     config.jwt.expires_in as string
+//   );
+//   const refreshToken = jwtHelpers.generateToken(
+//     {
+//       email: userData.email,
+//       role: userData.role,
+//     },
+//     config.jwt.refresh_token_secret as Secret,
+//     config.jwt.refresh_token_expires_in as string
+//   );
+//   return {
+//     accessToken,
+//     refreshToken,
+//     passwordChangeRequired: userData.passwordChangeRequired,
+//   };
+// };
+// const refreshToken = async (token: string) => {
+//   let decodedData;
+//   try {
+//     decodedData = jwtHelpers.verifyToken(
+//       token,
+//       config.jwt.refresh_token_secret as Secret
+//     );
+//   } catch (err) {
+//     throw new Error("You are not authorized!");
+//   }
+//   const userData = await prisma.user.findUniqueOrThrow({
+//     where: {
+//       email: decodedData.email,
+//       status: UserStatus.ACTIVE,
+//     },
+//   });
+//   const accessToken = jwtHelpers.generateToken(
+//     {
+//       userId: userData.id,
+//       name: userData.name,
+//       email: userData.email,
+//       role: userData.role,
+//       profilePhoto: userData.profilePhoto,
+//     },
+//     config.jwt.jwt_secret as Secret,
+//     config.jwt.expires_in as string
+//   );
+//   return {
+//     accessToken,
+//   };
+// };
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(payload);
-    // const userData = await prisma.user.findUniqueOrThrow({
-    //   where: {
-    //     email: payload.email,
-    //     status: UserStatus.ACTIVE,
-    //   },
-    // });
     const userData = yield prismaClient_1.default.user.findUnique({
         where: {
             email: payload.email,
-            status: client_1.UserStatus.ACTIVE
+            status: client_1.UserStatus.ACTIVE,
         },
     });
     if (!userData) {
@@ -65,7 +139,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const isCorrectPassword = yield bcrypt.compare(payload.password, userData.password);
     if (!isCorrectPassword) {
-        throw new Error("Password is incorrect!");
+        throw new Error('Password is incorrect!');
     }
     const accessToken = jwtHelper_1.jwtHelpers.generateToken({
         userId: userData.id,
@@ -74,6 +148,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         role: userData.role,
         profilePhoto: userData.profilePhoto,
     }, config_1.default.jwt.jwt_secret, config_1.default.jwt.expires_in);
+    console.log(accessToken);
     const refreshToken = jwtHelper_1.jwtHelpers.generateToken({
         email: userData.email,
         role: userData.role,
@@ -90,12 +165,11 @@ const refreshToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
         decodedData = jwtHelper_1.jwtHelpers.verifyToken(token, config_1.default.jwt.refresh_token_secret);
     }
     catch (err) {
-        throw new Error("You are not authorized!");
+        throw new Error('You are not authorized!');
     }
     const userData = yield prismaClient_1.default.user.findUniqueOrThrow({
         where: {
             email: decodedData.email,
-            status: client_1.UserStatus.ACTIVE,
         },
     });
     const accessToken = jwtHelper_1.jwtHelpers.generateToken({
@@ -120,7 +194,7 @@ const changePassword = (user, payload) => __awaiter(void 0, void 0, void 0, func
     //@ checking if the provided old password is correct
     const isCorrectPassword = yield bcrypt.compare(payload.oldPassword, userData.password);
     if (!isCorrectPassword) {
-        throw new Error("Password is incorrect!");
+        throw new Error('Password is incorrect!');
     }
     //@ hashing the new password
     const hashedPassword = yield bcrypt.hash(payload.newPassword, 10);
@@ -135,7 +209,7 @@ const changePassword = (user, payload) => __awaiter(void 0, void 0, void 0, func
         },
     });
     return {
-        message: "Password change successfully",
+        message: 'Password change successfully',
     };
 });
 const forgotPassword = (_a) => __awaiter(void 0, [_a], void 0, function* ({ email }) {
@@ -154,9 +228,9 @@ const forgotPassword = (_a) => __awaiter(void 0, [_a], void 0, function* ({ emai
     //@ generating a link to send via email
     let link = `${config_1.default.reset_pass_link}?Id=${userData.id}&token=${resetPasswordToken}`;
     //@ read HTML template file
-    const htmlFilePath = path_1.default.join(process.cwd(), "/src/templates/reset_pass_template.html");
-    const htmlTemplate = fs_1.default.readFileSync(htmlFilePath, "utf8");
-    const htmlContent = htmlTemplate.replace("{{resetPasswordLink}}", link);
+    const htmlFilePath = path_1.default.join(process.cwd(), '/src/templates/reset_pass_template.html');
+    const htmlTemplate = fs_1.default.readFileSync(htmlFilePath, 'utf8');
+    const htmlContent = htmlTemplate.replace('{{resetPasswordLink}}', link);
     yield (0, emailSender_1.default)(userData.email, htmlContent);
 });
 const resetPassword = (payload, token) => __awaiter(void 0, void 0, void 0, function* () {
@@ -167,11 +241,11 @@ const resetPassword = (payload, token) => __awaiter(void 0, void 0, void 0, func
         },
     });
     if (!isUserExist) {
-        throw new HTTPError_1.HTTPError(http_status_1.default.BAD_REQUEST, "User not found!");
+        throw new HTTPError_1.HTTPError(http_status_1.default.BAD_REQUEST, 'User not found!');
     }
     const isVarified = jwtHelper_1.jwtHelpers.verifyToken(token, config_1.default.jwt.reset_password_token_secret);
     if (!isVarified) {
-        throw new HTTPError_1.HTTPError(http_status_1.default.UNAUTHORIZED, "Something went wrong!");
+        throw new HTTPError_1.HTTPError(http_status_1.default.UNAUTHORIZED, 'Something went wrong!');
     }
     const password = yield bcrypt.hash(payload.newPassword, Number(config_1.default.bycrypt_salt_rounds));
     yield prismaClient_1.default.user.update({

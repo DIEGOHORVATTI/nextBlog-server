@@ -10,6 +10,11 @@ import { validateRequest } from '../../middlewares/validateRequest';
 
 const router = express.Router();
 router.get(
+  '/get-for-admin',
+
+  blogController.getAllBlogsForAdmin,
+);
+router.get(
   '/',
 
   blogController.getAllBlogs,

@@ -44,6 +44,18 @@ const getAllBlogs = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
         data: result.result,
     });
 }));
+const getAllBlogsForAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const validQueryParams = (0, filterValidQueryParams_1.filterValidQueryParams)(req.query, blog_constant_1.blogValidParams);
+    const paginationAndSortingQueryParams = (0, filterValidQueryParams_1.filterValidQueryParams)(req.query, appConstants_1.paginationAndSortingParams);
+    const result = yield blog_service_1.blogServicres.getAllBlogsForAdmin(validQueryParams, paginationAndSortingQueryParams);
+    (0, sendResponse_1.sendResponse)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Blog data fetched successfully!',
+        meta: result.meta,
+        data: result.result,
+    });
+}));
 const getSingleBlog = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const user = req.user;
@@ -131,4 +143,5 @@ exports.blogController = {
     changeApprovalStatusBlog,
     getSingleBlogBYModerator,
     voteCount,
+    getAllBlogsForAdmin,
 };

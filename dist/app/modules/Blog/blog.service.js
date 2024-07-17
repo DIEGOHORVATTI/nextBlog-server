@@ -42,58 +42,6 @@ const craeteBlogIntoDb = (payload, user) => __awaiter(void 0, void 0, void 0, fu
     });
     return result;
 });
-// const getAllBlogFomDB = async (
-//   queryParams: IBlogFilterParams,
-//   paginationAndSortingQueryParams: IPaginationParams & ISortingParams
-// ) => {
-//   const { q, ...otherQueryParams } = queryParams;
-//   const { limit, skip, page, sortBy, sortOrder } =
-//     generatePaginateAndSortOptions({
-//       ...paginationAndSortingQueryParams,
-//     });
-//   //  const conditions: Prisma.BlogWhereInput[] = [];
-//   const conditions: Prisma.BlogWhereInput[] = [];
-//   // filtering out the soft deleted users
-//   conditions.push({
-//     visibility: Visibility.PUBLIC,
-//   });
-//   //@ searching
-//   if (q) {
-//     const searchConditions = blogSearchableFields.map((field) => ({
-//       [field]: { contains: q, mode: "insensitive" },
-//     }));
-//     conditions.push({ OR: searchConditions });
-//   }
-//   //@ filtering with exact value
-//   if (Object.keys(otherQueryParams).length > 0) {
-//     const filterData = Object.keys(otherQueryParams).map((key) => ({
-//       [key]: (otherQueryParams as any)[key],
-//     }));
-//     conditions.push(...filterData);
-//   }
-//   const result = await prisma.blog.findMany({
-//     where: { AND: conditions },
-//     skip,
-//     take: limit,
-//     orderBy: {
-//       [sortBy]: sortOrder,
-//     },
-//     include: {
-//       author: true,
-//     },
-//   });
-//   const total = await prisma.blog.count({
-//     where: { AND: conditions },
-//   });
-//   return {
-//     meta: {
-//       page,
-//       limit,
-//       total,
-//     },
-//     result,
-//   };
-// };
 const getAllBlogFomDB = (queryParams, paginationAndSortingQueryParams) => __awaiter(void 0, void 0, void 0, function* () {
     const { q, tag } = queryParams, otherQueryParams = __rest(queryParams, ["q", "tag"]); // Destructure tag from queryParams
     const { limit, skip, page, sortBy, sortOrder } = (0, paginationHelpers_1.generatePaginateAndSortOptions)(Object.assign({}, paginationAndSortingQueryParams));
@@ -101,6 +49,67 @@ const getAllBlogFomDB = (queryParams, paginationAndSortingQueryParams) => __awai
     // filtering out the soft deleted users
     conditions.push({
         visibility: client_1.Visibility.PUBLIC,
+        publishedStatus: client_1.Published_status.APPROVED,
+    });
+    // Searching
+    if (q) {
+        const searchConditions = blog_constant_1.blogSearchableFields.map((field) => ({
+            [field]: { contains: q, mode: 'insensitive' },
+        }));
+        conditions.push({ OR: searchConditions });
+    }
+    // Filtering with exact value
+    if (Object.keys(otherQueryParams).length > 0) {
+        const filterData = Object.keys(otherQueryParams).map((key) => ({
+            [key]: otherQueryParams[key],
+        }));
+        conditions.push(...filterData);
+    }
+    // Filtering by tag name
+    if (tag) {
+        conditions.push({
+            tag: {
+                some: {
+                    name: {
+                        contains: tag,
+                        mode: 'insensitive',
+                    },
+                },
+            },
+        });
+    }
+    const result = yield prismaClient_1.default.blog.findMany({
+        where: { AND: conditions },
+        skip,
+        take: limit,
+        orderBy: {
+            [sortBy]: sortOrder,
+        },
+        include: {
+            author: true,
+            tag: true, // Include tags in the result
+        },
+    });
+    const total = yield prismaClient_1.default.blog.count({
+        where: { AND: conditions },
+    });
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+        },
+        result,
+    };
+});
+const getAllBlogsForAdmin = (queryParams, paginationAndSortingQueryParams) => __awaiter(void 0, void 0, void 0, function* () {
+    const { q, tag } = queryParams, otherQueryParams = __rest(queryParams, ["q", "tag"]); // Destructure tag from queryParams
+    const { limit, skip, page, sortBy, sortOrder } = (0, paginationHelpers_1.generatePaginateAndSortOptions)(Object.assign({}, paginationAndSortingQueryParams));
+    const conditions = [];
+    // filtering out the soft deleted users
+    conditions.push({
+        visibility: client_1.Visibility.PUBLIC,
+        // publishedStatus: Published_status.APPROVED,
     });
     // Searching
     if (q) {
@@ -367,4 +376,5 @@ exports.blogServicres = {
     changeApprovalStatusDB,
     getSingleBlogBYModerator,
     countVote,
+    getAllBlogsForAdmin,
 };

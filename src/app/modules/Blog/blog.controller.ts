@@ -47,6 +47,26 @@ const getAllBlogs = catchAsync(async (req: Request, res: Response) => {
     data: result.result,
   });
 });
+const getAllBlogsForAdmin = catchAsync(async (req: Request, res: Response) => {
+  const validQueryParams = filterValidQueryParams(req.query, blogValidParams);
+  const paginationAndSortingQueryParams = filterValidQueryParams(
+    req.query,
+    paginationAndSortingParams,
+  );
+
+  const result = await blogServicres.getAllBlogsForAdmin(
+    validQueryParams,
+    paginationAndSortingQueryParams,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Blog data fetched successfully!',
+    meta: result.meta,
+    data: result.result,
+  });
+});
 
 const getSingleBlog = catchAsync(
   async (req: Request & { user?: any }, res: Response) => {
@@ -100,6 +120,7 @@ const deleteBlog = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const updateBlog = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -163,4 +184,5 @@ export const blogController = {
   changeApprovalStatusBlog,
   getSingleBlogBYModerator,
   voteCount,
+  getAllBlogsForAdmin,
 };

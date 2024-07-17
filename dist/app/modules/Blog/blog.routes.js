@@ -12,6 +12,7 @@ const blog_validation_1 = require("./blog.validation");
 const blog_controller_1 = require("./blog.controller");
 const validateRequest_1 = require("../../middlewares/validateRequest");
 const router = express_1.default.Router();
+router.get('/get-for-admin', blog_controller_1.blogController.getAllBlogsForAdmin);
 router.get('/', blog_controller_1.blogController.getAllBlogs);
 router.get('/my-blogs', (0, authGuard_1.default)(client_1.UserRole.BLOGGER), blog_controller_1.blogController.getMyAllBlogs);
 router.get('/:id', blog_controller_1.blogController.getSingleBlog);

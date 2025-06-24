@@ -1,46 +1,8 @@
-"use strict";
 // // import multer from 'multer';
 // // import path from 'path';
 // // import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 // // import fs from 'fs';
 // // import { UploadedFile } from '../app/interfaces/file';
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.FileUploadHelper = void 0;
 // // const storage = multer.diskStorage({
 // //    destination: function (req, file, cb) {
 // //       cb(null, path.join(process.cwd(), '/uploads'));
@@ -122,38 +84,95 @@ exports.FileUploadHelper = void 0;
 //   upload,
 //   uploadToCloudinary,
 // };
-const cloudinary_1 = require("cloudinary");
-const multer_1 = __importDefault(require("multer"));
-const fs = __importStar(require("fs"));
-const config_1 = __importDefault(require("../config/config"));
-cloudinary_1.v2.config({
-    cloud_name: config_1.default.cloudinary.cloud_name,
-    api_key: config_1.default.cloudinary.api_key,
-    api_secret: config_1.default.cloudinary.api_secret,
+"use strict";
+Object.defineProperty(exports, "__esModule", {
+    value: true
 });
-const storage = multer_1.default.diskStorage({
-    destination: function (req, file, cb) {
+Object.defineProperty(exports, "FileUploadHelper", {
+    enumerable: true,
+    get: function() {
+        return FileUploadHelper;
+    }
+});
+const _cloudinary = require("cloudinary");
+const _multer = /*#__PURE__*/ _interop_require_default(require("multer"));
+const _fs = /*#__PURE__*/ _interop_require_wildcard(require("fs"));
+const _config = /*#__PURE__*/ _interop_require_default(require("../config/config"));
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+function _getRequireWildcardCache(nodeInterop) {
+    if (typeof WeakMap !== "function") return null;
+    var cacheBabelInterop = new WeakMap();
+    var cacheNodeInterop = new WeakMap();
+    return (_getRequireWildcardCache = function(nodeInterop) {
+        return nodeInterop ? cacheNodeInterop : cacheBabelInterop;
+    })(nodeInterop);
+}
+function _interop_require_wildcard(obj, nodeInterop) {
+    if (!nodeInterop && obj && obj.__esModule) {
+        return obj;
+    }
+    if (obj === null || typeof obj !== "object" && typeof obj !== "function") {
+        return {
+            default: obj
+        };
+    }
+    var cache = _getRequireWildcardCache(nodeInterop);
+    if (cache && cache.has(obj)) {
+        return cache.get(obj);
+    }
+    var newObj = {
+        __proto__: null
+    };
+    var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor;
+    for(var key in obj){
+        if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) {
+            var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null;
+            if (desc && (desc.get || desc.set)) {
+                Object.defineProperty(newObj, key, desc);
+            } else {
+                newObj[key] = obj[key];
+            }
+        }
+    }
+    newObj.default = obj;
+    if (cache) {
+        cache.set(obj, newObj);
+    }
+    return newObj;
+}
+_cloudinary.v2.config({
+    cloud_name: _config.default.cloudinary.cloud_name,
+    api_key: _config.default.cloudinary.api_key,
+    api_secret: _config.default.cloudinary.api_secret
+});
+const storage = _multer.default.diskStorage({
+    destination: function(req, file, cb) {
         cb(null, 'uploads/');
     },
-    filename: function (req, file, cb) {
+    filename: function(req, file, cb) {
         cb(null, file.originalname);
-    },
+    }
 });
-const upload = (0, multer_1.default)({ storage: storage });
-const uploadToCloudinary = (file) => __awaiter(void 0, void 0, void 0, function* () {
-    return new Promise((resolve, reject) => {
-        cloudinary_1.v2.uploader.upload(file.path, (error, result) => {
-            fs.unlinkSync(file.path);
+const upload = (0, _multer.default)({
+    storage: storage
+});
+const uploadToCloudinary = async (file)=>{
+    return new Promise((resolve, reject)=>{
+        _cloudinary.v2.uploader.upload(file.path, (error, result)=>{
+            _fs.unlinkSync(file.path);
             if (error) {
                 reject(error);
-            }
-            else {
+            } else {
                 resolve(result);
             }
         });
     });
-});
-exports.FileUploadHelper = {
+};
+const FileUploadHelper = {
     uploadToCloudinary,
-    upload,
+    upload
 };

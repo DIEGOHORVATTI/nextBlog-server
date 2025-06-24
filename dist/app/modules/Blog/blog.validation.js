@@ -1,35 +1,48 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.blogValidationSchema = void 0;
-const zod_1 = require("zod");
-const createBlog = zod_1.z.object({
-    body: zod_1.z.object({
-        title: zod_1.z.string(),
-        content: zod_1.z.string(),
-        conclusion: zod_1.z.string(),
-        image: zod_1.z.string().optional(),
-        authorId: zod_1.z.string(),
-        views: zod_1.z.number().optional(),
-        visibility: zod_1.z.enum(['PUBLIC', 'PRIVATE']), // Assuming Visibility is an enum
-        createdAt: zod_1.z.string(), // Assuming createdAt is a string in ISO format
-        updatedAt: zod_1.z.string(),
-    }),
+Object.defineProperty(exports, "__esModule", {
+    value: true
 });
-const updateBlog = zod_1.z.object({
-    body: zod_1.z.object({
-        title: zod_1.z.string().optional(),
-        content: zod_1.z.string().optional(),
-        category: zod_1.z.string().optional(),
-        conclusion: zod_1.z.string().optional(),
-    }),
+Object.defineProperty(exports, "blogValidationSchema", {
+    enumerable: true,
+    get: function() {
+        return blogValidationSchema;
+    }
 });
-const updateChangeApprovalStatusBlog = zod_1.z.object({
-    body: zod_1.z.object({
-        publishedStatus: zod_1.z.enum(['APPROVED', 'CANCEL']).optional(),
-    }),
+const _zod = require("zod");
+const createBlog = _zod.z.object({
+    body: _zod.z.object({
+        title: _zod.z.string(),
+        content: _zod.z.string(),
+        conclusion: _zod.z.string(),
+        image: _zod.z.string().optional(),
+        authorId: _zod.z.string(),
+        views: _zod.z.number().optional(),
+        visibility: _zod.z.enum([
+            'PUBLIC',
+            'PRIVATE'
+        ]),
+        createdAt: _zod.z.string(),
+        updatedAt: _zod.z.string()
+    })
 });
-exports.blogValidationSchema = {
+const updateBlog = _zod.z.object({
+    body: _zod.z.object({
+        title: _zod.z.string().optional(),
+        content: _zod.z.string().optional(),
+        category: _zod.z.string().optional(),
+        conclusion: _zod.z.string().optional()
+    })
+});
+const updateChangeApprovalStatusBlog = _zod.z.object({
+    body: _zod.z.object({
+        publishedStatus: _zod.z.enum([
+            'APPROVED',
+            'CANCEL'
+        ]).optional()
+    })
+});
+const blogValidationSchema = {
     createBlog,
     updateBlog,
-    updateChangeApprovalStatusBlog,
+    updateChangeApprovalStatusBlog
 };

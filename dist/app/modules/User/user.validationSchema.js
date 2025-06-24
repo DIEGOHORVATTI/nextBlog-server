@@ -1,41 +1,58 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.userValidationSchema = void 0;
-const zod_1 = require("zod");
-const createAdminSchema = zod_1.z.object({
-    body: zod_1.z.object({
-        password: zod_1.z.string(),
-        email: zod_1.z.string().email(),
-        name: zod_1.z.string(),
-        contactNumber: zod_1.z.string(),
-    }),
+Object.defineProperty(exports, "__esModule", {
+    value: true
 });
-const createAuthorSchema = zod_1.z.object({
-    body: zod_1.z.object({
-        password: zod_1.z.string(),
-        email: zod_1.z.string().email(),
-        name: zod_1.z.string(),
-        contactNumber: zod_1.z.string(),
-        gender: zod_1.z.enum(['MALE', 'FEMALE']),
-    }),
+Object.defineProperty(exports, "userValidationSchema", {
+    enumerable: true,
+    get: function() {
+        return userValidationSchema;
+    }
 });
-const createModaratorSchema = zod_1.z.object({
-    body: zod_1.z.object({
-        password: zod_1.z.string(),
-        email: zod_1.z.string().email(),
-        name: zod_1.z.string(),
-        contactNumber: zod_1.z.string(),
-        gender: zod_1.z.enum(['MALE', 'FEMALE']),
-    }),
+const _zod = require("zod");
+const createAdminSchema = _zod.z.object({
+    body: _zod.z.object({
+        password: _zod.z.string(),
+        email: _zod.z.string().email(),
+        name: _zod.z.string(),
+        contactNumber: _zod.z.string()
+    })
 });
-const userUpdateStatus = zod_1.z.object({
-    body: zod_1.z.object({
-        status: zod_1.z.enum(['ACTIVE', 'BLOCKED', 'DELETED']),
-    }),
+const createAuthorSchema = _zod.z.object({
+    body: _zod.z.object({
+        password: _zod.z.string(),
+        email: _zod.z.string().email(),
+        name: _zod.z.string(),
+        contactNumber: _zod.z.string(),
+        gender: _zod.z.enum([
+            'MALE',
+            'FEMALE'
+        ])
+    })
 });
-exports.userValidationSchema = {
+const createModaratorSchema = _zod.z.object({
+    body: _zod.z.object({
+        password: _zod.z.string(),
+        email: _zod.z.string().email(),
+        name: _zod.z.string(),
+        contactNumber: _zod.z.string(),
+        gender: _zod.z.enum([
+            'MALE',
+            'FEMALE'
+        ])
+    })
+});
+const userUpdateStatus = _zod.z.object({
+    body: _zod.z.object({
+        status: _zod.z.enum([
+            'ACTIVE',
+            'BLOCKED',
+            'DELETED'
+        ])
+    })
+});
+const userValidationSchema = {
     createAdminSchema,
     userUpdateStatus,
     createAuthorSchema,
-    createModaratorSchema,
+    createModaratorSchema
 };

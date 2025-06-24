@@ -1,21 +1,29 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdminRoutes = void 0;
-const express_1 = __importDefault(require("express"));
-const admin_controller_1 = require("./admin.controller");
-const validateRequest_1 = require("../../middlewares/validateRequest");
-const admin_ValidationSchema_1 = require("./admin.ValidationSchema");
-const authGuard_1 = __importDefault(require("../../middlewares/authGuard"));
-const client_1 = require("@prisma/client");
-const router = express_1.default.Router();
-router.get('/', 
-// authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-admin_controller_1.AdminController.getAllAdmin);
-router.get('/:id', (0, authGuard_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), admin_controller_1.AdminController.getSingleAdmin);
-router.patch('/:id', (0, authGuard_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), (0, validateRequest_1.validateRequest)(admin_ValidationSchema_1.adminValidationSchemas.update), admin_controller_1.AdminController.updateAdmin);
-router.delete('/:id', (0, authGuard_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), admin_controller_1.AdminController.deleteAdmin);
-router.delete('/soft/:id', (0, authGuard_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), admin_controller_1.AdminController.softDeleteAdmin);
-exports.AdminRoutes = router;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "AdminRoutes", {
+    enumerable: true,
+    get: function() {
+        return AdminRoutes;
+    }
+});
+const _express = /*#__PURE__*/ _interop_require_default(require("express"));
+const _admincontroller = require("./admin.controller");
+const _validateRequest = require("../../middlewares/validateRequest");
+const _adminValidationSchema = require("./admin.ValidationSchema");
+const _authGuard = /*#__PURE__*/ _interop_require_default(require("../../middlewares/authGuard"));
+const _client = require("@prisma/client");
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+const router = _express.default.Router();
+router.get('/', // authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+_admincontroller.AdminController.getAllAdmin);
+router.get('/:id', (0, _authGuard.default)(_client.UserRole.ADMIN, _client.UserRole.SUPER_ADMIN), _admincontroller.AdminController.getSingleAdmin);
+router.patch('/:id', (0, _authGuard.default)(_client.UserRole.ADMIN, _client.UserRole.SUPER_ADMIN), (0, _validateRequest.validateRequest)(_adminValidationSchema.adminValidationSchemas.update), _admincontroller.AdminController.updateAdmin);
+router.delete('/:id', (0, _authGuard.default)(_client.UserRole.ADMIN, _client.UserRole.SUPER_ADMIN), _admincontroller.AdminController.deleteAdmin);
+router.delete('/soft/:id', (0, _authGuard.default)(_client.UserRole.ADMIN, _client.UserRole.SUPER_ADMIN), _admincontroller.AdminController.softDeleteAdmin);
+const AdminRoutes = router;

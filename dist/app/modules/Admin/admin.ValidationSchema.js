@@ -1,16 +1,26 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.adminValidationSchemas = void 0;
-const zod_1 = require("zod");
-const update = zod_1.z.object({
-    body: zod_1.z.object({
-        name: zod_1.z.string().optional(),
-        contactNumber: zod_1.z.string().optional(),
-        address: zod_1.z.string().optional(),
-        profilePhoto: zod_1.z.string().optional(),
-        gender: zod_1.z.enum(['MALE', 'FEMALE']).optional(),
-    }),
+Object.defineProperty(exports, "__esModule", {
+    value: true
 });
-exports.adminValidationSchemas = {
-    update,
+Object.defineProperty(exports, "adminValidationSchemas", {
+    enumerable: true,
+    get: function() {
+        return adminValidationSchemas;
+    }
+});
+const _zod = require("zod");
+const update = _zod.z.object({
+    body: _zod.z.object({
+        name: _zod.z.string().optional(),
+        contactNumber: _zod.z.string().optional(),
+        address: _zod.z.string().optional(),
+        profilePhoto: _zod.z.string().optional(),
+        gender: _zod.z.enum([
+            'MALE',
+            'FEMALE'
+        ]).optional()
+    })
+});
+const adminValidationSchemas = {
+    update
 };

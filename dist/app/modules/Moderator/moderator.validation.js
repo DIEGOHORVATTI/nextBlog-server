@@ -1,13 +1,20 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.moderatorValidationSchemas = void 0;
-const zod_1 = require("zod");
-const updateModeratorSchema = zod_1.z.object({
-    body: zod_1.z.object({
-        name: zod_1.z.string().optional(),
-        contactNumber: zod_1.z.string().optional(),
-    }),
+Object.defineProperty(exports, "__esModule", {
+    value: true
 });
-exports.moderatorValidationSchemas = {
-    updateModeratorSchema,
+Object.defineProperty(exports, "moderatorValidationSchemas", {
+    enumerable: true,
+    get: function() {
+        return moderatorValidationSchemas;
+    }
+});
+const _zod = require("zod");
+const updateModeratorSchema = _zod.z.object({
+    body: _zod.z.object({
+        name: _zod.z.string().optional(),
+        contactNumber: _zod.z.string().optional()
+    })
+});
+const moderatorValidationSchemas = {
+    updateModeratorSchema
 };

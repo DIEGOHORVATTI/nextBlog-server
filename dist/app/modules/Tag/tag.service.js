@@ -1,22 +1,7 @@
-"use strict";
 // import httpStatus from 'http-status';
 // import prisma from '../../../shared/prismaClient';
 // import { HTTPError } from '../../errors/HTTPError';
 // import { Tag } from '@prisma/client';
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TagServices = void 0;
 // const addTag = async (data: Tag) => {
 //   const blogData = await prisma.blog.findUnique({
 //     where: {
@@ -42,40 +27,55 @@ exports.TagServices = void 0;
 // export const TagServices = {
 //   addTag,
 // };
-const http_status_1 = __importDefault(require("http-status"));
-const prismaClient_1 = __importDefault(require("../../../shared/prismaClient"));
-const HTTPError_1 = require("../../errors/HTTPError");
-const addTag = (data) => __awaiter(void 0, void 0, void 0, function* () {
+"use strict";
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "TagServices", {
+    enumerable: true,
+    get: function() {
+        return TagServices;
+    }
+});
+const _httpstatus = /*#__PURE__*/ _interop_require_default(require("http-status"));
+const _prismaClient = /*#__PURE__*/ _interop_require_default(require("../../../shared/prismaClient"));
+const _HTTPError = require("../../errors/HTTPError");
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+const addTag = async (data)=>{
     // Check if blogId is provided
     if (!data.blogId) {
-        throw new HTTPError_1.HTTPError(http_status_1.default.BAD_REQUEST, 'Blog ID must be provided');
+        throw new _HTTPError.HTTPError(_httpstatus.default.BAD_REQUEST, 'Blog ID must be provided');
     }
-    const blogData = yield prismaClient_1.default.blog.findUnique({
+    const blogData = await _prismaClient.default.blog.findUnique({
         where: {
-            id: data.blogId,
-        },
+            id: data.blogId
+        }
     });
     if (!blogData) {
-        throw new HTTPError_1.HTTPError(http_status_1.default.BAD_REQUEST, 'Blog not found');
+        throw new _HTTPError.HTTPError(_httpstatus.default.BAD_REQUEST, 'Blog not found');
     }
-    const existTag = yield prismaClient_1.default.tag.findUnique({
+    const existTag = await _prismaClient.default.tag.findUnique({
         where: {
-            name: data.name,
-        },
+            name: data.name
+        }
     });
     if (existTag) {
-        throw new HTTPError_1.HTTPError(http_status_1.default.BAD_REQUEST, 'This tag already added');
+        throw new _HTTPError.HTTPError(_httpstatus.default.BAD_REQUEST, 'This tag already added');
     }
-    const result = yield prismaClient_1.default.tag.create({
-        data,
+    const result = await _prismaClient.default.tag.create({
+        data
     });
     return result;
-});
-const getAllTags = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield prismaClient_1.default.tag.findMany({});
+};
+const getAllTags = async ()=>{
+    const result = await _prismaClient.default.tag.findMany({});
     return result;
-});
-exports.TagServices = {
+};
+const TagServices = {
     addTag,
-    getAllTags,
+    getAllTags
 };

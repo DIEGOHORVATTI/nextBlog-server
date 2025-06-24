@@ -1,114 +1,117 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CommentServices = void 0;
-const prismaClient_1 = __importDefault(require("../../../shared/prismaClient"));
-const createCommentIntoDB = (user, payload) => __awaiter(void 0, void 0, void 0, function* () {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "CommentServices", {
+    enumerable: true,
+    get: function() {
+        return CommentServices;
+    }
+});
+const _prismaClient = /*#__PURE__*/ _interop_require_default(require("../../../shared/prismaClient"));
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+const createCommentIntoDB = async (user, payload)=>{
     console.log(user);
-    const userData = yield prismaClient_1.default.user.findUniqueOrThrow({
+    const userData = await _prismaClient.default.user.findUniqueOrThrow({
         where: {
-            email: user === null || user === void 0 ? void 0 : user.email,
-        },
+            email: user?.email
+        }
     });
-    const blogData = yield prismaClient_1.default.blog.findUniqueOrThrow({
+    const blogData = await _prismaClient.default.blog.findUniqueOrThrow({
         where: {
             id: payload.blogId,
-            authorId: payload.authorId,
-        },
+            authorId: payload.authorId
+        }
     });
-    const result = yield prismaClient_1.default.comment.create({
-        data: Object.assign(Object.assign({}, payload), { commentorId: userData.id }),
+    const result = await _prismaClient.default.comment.create({
+        data: {
+            ...payload,
+            commentorId: userData.id
+        }
     });
     return result;
-});
-const updateCommentIntoDb = (id, payload, user) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const updateCommentIntoDb = async (id, payload, user)=>{
     console.log(payload);
-    const commentorData = yield prismaClient_1.default.user.findUniqueOrThrow({
+    const commentorData = await _prismaClient.default.user.findUniqueOrThrow({
         where: {
-            email: user.email,
-        },
+            email: user.email
+        }
     });
-    yield prismaClient_1.default.comment.findUniqueOrThrow({
+    await _prismaClient.default.comment.findUniqueOrThrow({
         where: {
             id,
-            commentorId: commentorData.id,
-        },
+            commentorId: commentorData.id
+        }
     });
-    const result = yield prismaClient_1.default.comment.update({
+    const result = await _prismaClient.default.comment.update({
         where: {
-            id,
+            id
         },
-        data: payload,
+        data: payload
     });
     return result;
-});
-const deleteCommentFromDB = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
-    yield prismaClient_1.default.user.findUniqueOrThrow({
+};
+const deleteCommentFromDB = async (id, user)=>{
+    await _prismaClient.default.user.findUniqueOrThrow({
         where: {
-            email: user.email,
-        },
+            email: user.email
+        }
     });
-    yield prismaClient_1.default.comment.findUniqueOrThrow({
+    await _prismaClient.default.comment.findUniqueOrThrow({
         where: {
-            id,
-        },
+            id
+        }
     });
-    const result = yield prismaClient_1.default.comment.delete({
+    const result = await _prismaClient.default.comment.delete({
         where: {
-            id,
-        },
+            id
+        }
     });
     console.log(result);
     return result;
-});
-const getAllCommentsFromDB = (blogId) => __awaiter(void 0, void 0, void 0, function* () {
-    yield prismaClient_1.default.blog.findUniqueOrThrow({
+};
+const getAllCommentsFromDB = async (blogId)=>{
+    await _prismaClient.default.blog.findUniqueOrThrow({
         where: {
-            id: blogId,
-        },
+            id: blogId
+        }
     });
-    const result = yield prismaClient_1.default.comment.findMany({
+    const result = await _prismaClient.default.comment.findMany({
         where: {
-            blogId: blogId,
+            blogId: blogId
         },
         include: {
-            comment: true,
+            comment: true
         },
         orderBy: {
-            createdAt: 'asc',
-        },
+            createdAt: 'asc'
+        }
     });
     return result;
-});
-const getSingleCommentFromDB = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
-    yield prismaClient_1.default.user.findUniqueOrThrow({
+};
+const getSingleCommentFromDB = async (id, user)=>{
+    await _prismaClient.default.user.findUniqueOrThrow({
         where: {
-            email: user.email,
-        },
+            email: user.email
+        }
     });
-    const result = yield prismaClient_1.default.comment.findFirstOrThrow({
+    const result = await _prismaClient.default.comment.findFirstOrThrow({
         where: {
             id,
-            commentorId: user.id,
-        },
+            commentorId: user.id
+        }
     });
     return result;
-});
-exports.CommentServices = {
+};
+const CommentServices = {
     createCommentIntoDB,
     updateCommentIntoDb,
     deleteCommentFromDB,
     getAllCommentsFromDB,
-    getSingleCommentFromDB,
+    getSingleCommentFromDB
 };

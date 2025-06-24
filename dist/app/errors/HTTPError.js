@@ -1,18 +1,24 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.HTTPError = void 0;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "HTTPError", {
+    enumerable: true,
+    get: function() {
+        return HTTPError;
+    }
+});
 class HTTPError extends Error {
-    constructor(statusCode, message, stack = '') {
+    statusCode;
+    constructor(statusCode, message, stack = ''){
         super(message);
         this.name = this.constructor.name;
         this.statusCode = statusCode;
         this.stack = stack;
         if (stack) {
             this.stack = stack;
-        }
-        else {
+        } else {
             Error.captureStackTrace(this, this.constructor);
         }
     }
 }
-exports.HTTPError = HTTPError;

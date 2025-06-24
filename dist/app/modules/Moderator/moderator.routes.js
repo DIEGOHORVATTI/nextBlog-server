@@ -1,19 +1,28 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ModeratorRoutes = void 0;
-const express_1 = __importDefault(require("express"));
-const validateRequest_1 = require("../../middlewares/validateRequest");
-const authGuard_1 = __importDefault(require("../../middlewares/authGuard"));
-const client_1 = require("@prisma/client");
-const moderator_controller_1 = require("./moderator.controller");
-const moderator_validation_1 = require("./moderator.validation");
-const router = express_1.default.Router();
-router.get('/', (0, authGuard_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), moderator_controller_1.ModeratorController.getAllModerator);
-router.get('/:id', moderator_controller_1.ModeratorController.getSingleModerator);
-router.patch('/:id', (0, validateRequest_1.validateRequest)(moderator_validation_1.moderatorValidationSchemas.updateModeratorSchema), moderator_controller_1.ModeratorController.updateModerator);
-router.delete('/:id', moderator_controller_1.ModeratorController.deleteModerator);
-router.delete('/soft/:id', moderator_controller_1.ModeratorController.softDeleteModerator);
-exports.ModeratorRoutes = router;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "ModeratorRoutes", {
+    enumerable: true,
+    get: function() {
+        return ModeratorRoutes;
+    }
+});
+const _express = /*#__PURE__*/ _interop_require_default(require("express"));
+const _validateRequest = require("../../middlewares/validateRequest");
+const _authGuard = /*#__PURE__*/ _interop_require_default(require("../../middlewares/authGuard"));
+const _client = require("@prisma/client");
+const _moderatorcontroller = require("./moderator.controller");
+const _moderatorvalidation = require("./moderator.validation");
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+const router = _express.default.Router();
+router.get('/', (0, _authGuard.default)(_client.UserRole.ADMIN, _client.UserRole.SUPER_ADMIN), _moderatorcontroller.ModeratorController.getAllModerator);
+router.get('/:id', _moderatorcontroller.ModeratorController.getSingleModerator);
+router.patch('/:id', (0, _validateRequest.validateRequest)(_moderatorvalidation.moderatorValidationSchemas.updateModeratorSchema), _moderatorcontroller.ModeratorController.updateModerator);
+router.delete('/:id', _moderatorcontroller.ModeratorController.deleteModerator);
+router.delete('/soft/:id', _moderatorcontroller.ModeratorController.softDeleteModerator);
+const ModeratorRoutes = router;

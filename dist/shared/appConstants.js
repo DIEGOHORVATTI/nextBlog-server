@@ -1,9 +1,16 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.paginationAndSortingParams = void 0;
-exports.paginationAndSortingParams = [
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "paginationAndSortingParams", {
+    enumerable: true,
+    get: function() {
+        return paginationAndSortingParams;
+    }
+});
+const paginationAndSortingParams = [
     'page',
     'limit',
     'sortBy',
-    'sortOrder',
+    'sortOrder'
 ];

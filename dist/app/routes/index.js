@@ -1,61 +1,71 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const auth_routes_1 = require("../modules/auth/auth.routes");
-const user_routes_1 = require("../modules/User/user.routes");
-const admin_routes_1 = require("../modules/Admin/admin.routes");
-const blog_routes_1 = require("../modules/Blog/blog.routes");
-const author_routes_1 = require("../modules/Author/author.routes");
-const moderator_routes_1 = require("../modules/Moderator/moderator.routes");
-const comment_routes_1 = require("../modules/Comment/comment.routes");
-const like_routes_1 = require("../modules/Like/like.routes");
-const meta_routes_1 = require("../modules/Meta/meta.routes");
-const tag_route_1 = require("../modules/Tag/tag.route");
-const router = express_1.default.Router();
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return _default;
+    }
+});
+const _express = /*#__PURE__*/ _interop_require_default(require("express"));
+const _authroutes = require("../modules/auth/auth.routes");
+const _userroutes = require("../modules/User/user.routes");
+const _adminroutes = require("../modules/Admin/admin.routes");
+const _blogroutes = require("../modules/Blog/blog.routes");
+const _authorroutes = require("../modules/Author/author.routes");
+const _moderatorroutes = require("../modules/Moderator/moderator.routes");
+const _commentroutes = require("../modules/Comment/comment.routes");
+const _likeroutes = require("../modules/Like/like.routes");
+const _metaroutes = require("../modules/Meta/meta.routes");
+const _tagroute = require("../modules/Tag/tag.route");
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+const router = _express.default.Router();
 const moduleRoutes = [
     {
         path: '/user',
-        route: user_routes_1.userRoutes,
+        route: _userroutes.userRoutes
     },
     {
         path: '/admin',
-        route: admin_routes_1.AdminRoutes,
+        route: _adminroutes.AdminRoutes
     },
     {
         path: '/author',
-        route: author_routes_1.AuthorRoutes,
+        route: _authorroutes.AuthorRoutes
     },
     {
         path: '/moderator',
-        route: moderator_routes_1.ModeratorRoutes,
+        route: _moderatorroutes.ModeratorRoutes
     },
     {
         path: '/auth',
-        route: auth_routes_1.authRoutes,
+        route: _authroutes.authRoutes
     },
     {
         path: '/blog',
-        route: blog_routes_1.blogRoutes,
+        route: _blogroutes.blogRoutes
     },
     {
         path: '/comment',
-        route: comment_routes_1.CommentRoutes,
+        route: _commentroutes.CommentRoutes
     },
     {
         path: '/like',
-        route: like_routes_1.LikeRoutes,
+        route: _likeroutes.LikeRoutes
     },
     {
         path: '/metadata',
-        route: meta_routes_1.MetaRoutes,
+        route: _metaroutes.MetaRoutes
     },
     {
         path: '/tag',
-        route: tag_route_1.TagRoutes,
-    },
+        route: _tagroute.TagRoutes
+    }
 ];
-moduleRoutes.forEach((route) => router.use(route.path, route.route));
-exports.default = router;
+moduleRoutes.forEach((route)=>router.use(route.path, route.route));
+const _default = router;

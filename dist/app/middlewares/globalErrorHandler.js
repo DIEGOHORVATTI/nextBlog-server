@@ -1,19 +1,28 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const client_1 = require("@prisma/client");
-const http_status_1 = __importDefault(require("http-status"));
-const globalErrorhandler = (err, req, res, next) => {
-    let statusCode = http_status_1.default.INTERNAL_SERVER_ERROR;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return _default;
+    }
+});
+const _client = require("@prisma/client");
+const _httpstatus = /*#__PURE__*/ _interop_require_default(require("http-status"));
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+const globalErrorhandler = (err, req, res, next)=>{
+    let statusCode = _httpstatus.default.INTERNAL_SERVER_ERROR;
     let success = false;
     let message = err.message || 'something went wrong';
     let error = err;
-    if (err instanceof client_1.Prisma.PrismaClientValidationError) {
-        (message = 'Validation Error'), (error = err.message);
-    }
-    else if (err instanceof client_1.Prisma.PrismaClientKnownRequestError) {
+    if (err instanceof _client.Prisma.PrismaClientValidationError) {
+        message = 'Validation Error', error = err.message;
+    } else if (err instanceof _client.Prisma.PrismaClientKnownRequestError) {
         if (err.code === 'P2002') {
             message = 'Duplicate Key Error';
             error = err.meta;
@@ -22,7 +31,7 @@ const globalErrorhandler = (err, req, res, next) => {
     res.status(statusCode).json({
         success,
         message,
-        error,
+        error
     });
 };
-exports.default = globalErrorhandler;
+const _default = globalErrorhandler;

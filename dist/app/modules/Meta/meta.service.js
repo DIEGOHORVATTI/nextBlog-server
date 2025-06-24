@@ -1,66 +1,66 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.metaServices = void 0;
-const http_status_1 = __importDefault(require("http-status"));
-const prismaClient_1 = __importDefault(require("../../../shared/prismaClient"));
-const client_1 = require("@prisma/client");
-const HTTPError_1 = require("../../errors/HTTPError");
-const fetchDashboardMetadata = (user) => __awaiter(void 0, void 0, void 0, function* () {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "metaServices", {
+    enumerable: true,
+    get: function() {
+        return metaServices;
+    }
+});
+const _httpstatus = /*#__PURE__*/ _interop_require_default(require("http-status"));
+const _prismaClient = /*#__PURE__*/ _interop_require_default(require("../../../shared/prismaClient"));
+const _client = require("@prisma/client");
+const _HTTPError = require("../../errors/HTTPError");
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+const fetchDashboardMetadata = async (user)=>{
     let metadata;
-    switch (user.role) {
-        case client_1.UserRole.ADMIN:
-            metadata = yield getAdminDashboardMetadata();
+    switch(user.role){
+        case _client.UserRole.ADMIN:
+            metadata = await getAdminDashboardMetadata();
             break;
-        case client_1.UserRole.SUPER_ADMIN:
-            metadata = yield getSuperAdminDashboardMetadata();
+        case _client.UserRole.SUPER_ADMIN:
+            metadata = await getSuperAdminDashboardMetadata();
             break;
-        case client_1.UserRole.MODERATOR:
-            metadata = yield getModeratorDashboardMetadata(user);
+        case _client.UserRole.MODERATOR:
+            metadata = await getModeratorDashboardMetadata(user);
             break;
-        case client_1.UserRole.BLOGGER:
-            metadata = yield getBloggerDashboardMetadata(user);
+        case _client.UserRole.BLOGGER:
+            metadata = await getBloggerDashboardMetadata(user);
             break;
         default:
             throw new Error('Invalid user role');
     }
     return metadata;
-});
-const getAdminDashboardMetadata = () => __awaiter(void 0, void 0, void 0, function* () {
-    const blogCount = yield prismaClient_1.default.blog.count();
-    const bloggerCount = yield prismaClient_1.default.author.count();
-    const adminCount = yield prismaClient_1.default.admin.count();
-    const commentCount = yield prismaClient_1.default.comment.count();
-    const likeCount = yield prismaClient_1.default.like.count();
-    const moderatorCount = yield prismaClient_1.default.moderator.count();
-    const pendingBlogCount = yield prismaClient_1.default.blog.count({
+};
+const getAdminDashboardMetadata = async ()=>{
+    const blogCount = await _prismaClient.default.blog.count();
+    const bloggerCount = await _prismaClient.default.author.count();
+    const adminCount = await _prismaClient.default.admin.count();
+    const commentCount = await _prismaClient.default.comment.count();
+    const likeCount = await _prismaClient.default.like.count();
+    const moderatorCount = await _prismaClient.default.moderator.count();
+    const pendingBlogCount = await _prismaClient.default.blog.count({
         where: {
-            publishedStatus: client_1.Published_status.PENDING,
-        },
+            publishedStatus: _client.Published_status.PENDING
+        }
     });
-    const approvedBlogCount = yield prismaClient_1.default.blog.count({
+    const approvedBlogCount = await _prismaClient.default.blog.count({
         where: {
-            publishedStatus: client_1.Published_status.APPROVED,
-        },
+            publishedStatus: _client.Published_status.APPROVED
+        }
     });
-    const cancelBlogCount = yield prismaClient_1.default.blog.count({
+    const cancelBlogCount = await _prismaClient.default.blog.count({
         where: {
-            publishedStatus: client_1.Published_status.CANCEL,
-        },
+            publishedStatus: _client.Published_status.CANCEL
+        }
     });
-    const barChartData = yield getBarChartData();
-    const pieChartData = yield getPieChartData();
+    const barChartData = await getBarChartData();
+    const pieChartData = await getPieChartData();
     return {
         blogCount,
         bloggerCount,
@@ -71,34 +71,34 @@ const getAdminDashboardMetadata = () => __awaiter(void 0, void 0, void 0, functi
         approvedBlogCount,
         cancelBlogCount,
         pieChartData,
-        barChartData,
+        barChartData
     };
-});
-const getSuperAdminDashboardMetadata = () => __awaiter(void 0, void 0, void 0, function* () {
-    const blogCount = yield prismaClient_1.default.blog.count();
-    const bloggerCount = yield prismaClient_1.default.author.count();
-    const adminCount = yield prismaClient_1.default.admin.count();
-    const userCount = yield prismaClient_1.default.user.count();
-    const commentCount = yield prismaClient_1.default.comment.count();
-    const likeCount = yield prismaClient_1.default.like.count();
-    const moderatorCount = yield prismaClient_1.default.moderator.count();
-    const pendingBlogCount = yield prismaClient_1.default.blog.count({
+};
+const getSuperAdminDashboardMetadata = async ()=>{
+    const blogCount = await _prismaClient.default.blog.count();
+    const bloggerCount = await _prismaClient.default.author.count();
+    const adminCount = await _prismaClient.default.admin.count();
+    const userCount = await _prismaClient.default.user.count();
+    const commentCount = await _prismaClient.default.comment.count();
+    const likeCount = await _prismaClient.default.like.count();
+    const moderatorCount = await _prismaClient.default.moderator.count();
+    const pendingBlogCount = await _prismaClient.default.blog.count({
         where: {
-            publishedStatus: client_1.Published_status.PENDING,
-        },
+            publishedStatus: _client.Published_status.PENDING
+        }
     });
-    const approvedBlogCount = yield prismaClient_1.default.blog.count({
+    const approvedBlogCount = await _prismaClient.default.blog.count({
         where: {
-            publishedStatus: client_1.Published_status.APPROVED,
-        },
+            publishedStatus: _client.Published_status.APPROVED
+        }
     });
-    const cancelBlogCount = yield prismaClient_1.default.blog.count({
+    const cancelBlogCount = await _prismaClient.default.blog.count({
         where: {
-            publishedStatus: client_1.Published_status.CANCEL,
-        },
+            publishedStatus: _client.Published_status.CANCEL
+        }
     });
-    const barChartData = yield getBarChartData();
-    const pieChartData = yield getPieChartData();
+    const barChartData = await getBarChartData();
+    const pieChartData = await getPieChartData();
     return {
         blogCount,
         bloggerCount,
@@ -111,37 +111,37 @@ const getSuperAdminDashboardMetadata = () => __awaiter(void 0, void 0, void 0, f
         pieChartData,
         barChartData,
         userCount,
-        moderatorCount,
+        moderatorCount
     };
-});
-const getModeratorDashboardMetadata = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    yield prismaClient_1.default.user.findUniqueOrThrow({
+};
+const getModeratorDashboardMetadata = async (user)=>{
+    await _prismaClient.default.user.findUniqueOrThrow({
         where: {
-            email: user === null || user === void 0 ? void 0 : user.email,
-        },
+            email: user?.email
+        }
     });
-    const bloggerCount = yield prismaClient_1.default.author.count();
-    const blogCount = yield prismaClient_1.default.blog.count();
-    const moderatorCount = yield prismaClient_1.default.moderator.count();
-    const pendingBlogCount = yield prismaClient_1.default.blog.count({
+    const bloggerCount = await _prismaClient.default.author.count();
+    const blogCount = await _prismaClient.default.blog.count();
+    const moderatorCount = await _prismaClient.default.moderator.count();
+    const pendingBlogCount = await _prismaClient.default.blog.count({
         where: {
-            publishedStatus: client_1.Published_status.PENDING,
-        },
+            publishedStatus: _client.Published_status.PENDING
+        }
     });
-    const approvedBlogCount = yield prismaClient_1.default.blog.count({
+    const approvedBlogCount = await _prismaClient.default.blog.count({
         where: {
-            publishedStatus: client_1.Published_status.APPROVED,
-        },
+            publishedStatus: _client.Published_status.APPROVED
+        }
     });
-    const cancelBlogCount = yield prismaClient_1.default.blog.count({
+    const cancelBlogCount = await _prismaClient.default.blog.count({
         where: {
-            publishedStatus: client_1.Published_status.CANCEL,
-        },
+            publishedStatus: _client.Published_status.CANCEL
+        }
     });
-    const commentCount = yield prismaClient_1.default.comment.count();
-    const likeCount = yield prismaClient_1.default.like.count();
-    const barChartData = yield getBarChartData();
-    const pieChartData = yield getPieChartData();
+    const commentCount = await _prismaClient.default.comment.count();
+    const likeCount = await _prismaClient.default.like.count();
+    const barChartData = await getBarChartData();
+    const pieChartData = await getPieChartData();
     return {
         blogCount,
         bloggerCount,
@@ -151,58 +151,57 @@ const getModeratorDashboardMetadata = (user) => __awaiter(void 0, void 0, void 0
         pendingBlogCount,
         approvedBlogCount,
         cancelBlogCount,
-        barChartData,
+        barChartData
     };
-});
-const getBloggerDashboardMetadata = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const blogger = yield prismaClient_1.default.author.findUnique({
+};
+const getBloggerDashboardMetadata = async (user)=>{
+    const blogger = await _prismaClient.default.author.findUnique({
         where: {
-            email: user === null || user === void 0 ? void 0 : user.email,
-        },
+            email: user?.email
+        }
     });
     if (!blogger) {
-        throw new HTTPError_1.HTTPError(http_status_1.default.BAD_REQUEST, 'Patient not found!');
+        throw new _HTTPError.HTTPError(_httpstatus.default.BAD_REQUEST, 'Patient not found!');
     }
-    const blogCount = yield prismaClient_1.default.blog.count({
+    const blogCount = await _prismaClient.default.blog.count({
         where: {
-            authorId: blogger.id,
-        },
+            authorId: blogger.id
+        }
     });
-    const pendingBlogCount = yield prismaClient_1.default.blog.count({
+    const pendingBlogCount = await _prismaClient.default.blog.count({
         where: {
-            publishedStatus: client_1.Published_status.PENDING,
-            authorId: blogger.id,
-        },
+            publishedStatus: _client.Published_status.PENDING,
+            authorId: blogger.id
+        }
     });
-    const approvedBlogCount = yield prismaClient_1.default.blog.count({
+    const approvedBlogCount = await _prismaClient.default.blog.count({
         where: {
-            publishedStatus: client_1.Published_status.APPROVED,
-            authorId: blogger.id,
-        },
+            publishedStatus: _client.Published_status.APPROVED,
+            authorId: blogger.id
+        }
     });
-    const cancelBlogCount = yield prismaClient_1.default.blog.count({
+    const cancelBlogCount = await _prismaClient.default.blog.count({
         where: {
-            publishedStatus: client_1.Published_status.CANCEL,
-            authorId: blogger.id,
-        },
+            publishedStatus: _client.Published_status.CANCEL,
+            authorId: blogger.id
+        }
     });
-    const commentCount = yield prismaClient_1.default.comment.count({
+    const commentCount = await _prismaClient.default.comment.count({
         where: {
-            authorId: blogger.id,
-        },
+            authorId: blogger.id
+        }
     });
-    const viewCount = yield prismaClient_1.default.blog.aggregate({
+    const viewCount = await _prismaClient.default.blog.aggregate({
         where: {
-            authorId: blogger.id,
+            authorId: blogger.id
         },
         _sum: {
-            views: true,
-        },
+            views: true
+        }
     });
-    const totalViews = ((_a = viewCount._sum) === null || _a === void 0 ? void 0 : _a.views) || 0;
-    const barChartData = yield getBarChartData();
-    const pieChartData = yield getPieChartData();
+    const totalViews = viewCount._sum?.views || 0;
+    const barChartData = await getBarChartData();
+    const pieChartData = await getPieChartData();
     return {
         blogCount,
         cancelBlogCount,
@@ -211,34 +210,38 @@ const getBloggerDashboardMetadata = (user) => __awaiter(void 0, void 0, void 0, 
         commentCount,
         totalViews,
         barChartData,
-        pieChartData,
+        pieChartData
     };
-});
-const getBarChartData = () => __awaiter(void 0, void 0, void 0, function* () {
-    const appointmentCountByDay = yield prismaClient_1.default.$queryRaw `
+};
+const getBarChartData = async ()=>{
+    const appointmentCountByDay = await _prismaClient.default.$queryRaw`
         SELECT DATE_TRUNC('day', "createdAt") AS day,
                COUNT(*) AS count
         FROM "blogs"
         GROUP BY day
         ORDER BY day ASC
     `;
-    const formattedMetadata = appointmentCountByDay.map(({ day, count }) => ({
-        day,
-        count: Number(count), // Convert BigInt to integer
-    }));
+    const formattedMetadata = appointmentCountByDay.map(({ day, count })=>({
+            day,
+            count: Number(count)
+        }));
     return formattedMetadata;
-});
-const getPieChartData = () => __awaiter(void 0, void 0, void 0, function* () {
-    const appointmentStatusDistribution = yield prismaClient_1.default.blog.groupBy({
-        by: ['id'],
-        _count: { id: true },
+};
+const getPieChartData = async ()=>{
+    const appointmentStatusDistribution = await _prismaClient.default.blog.groupBy({
+        by: [
+            'id'
+        ],
+        _count: {
+            id: true
+        }
     });
-    const formattedData = appointmentStatusDistribution.map(({ id, _count }) => ({
-        id,
-        count: Number(_count.id), // Convert BigInt to integer
-    }));
+    const formattedData = appointmentStatusDistribution.map(({ id, _count })=>({
+            id,
+            count: Number(_count.id)
+        }));
     return formattedData;
-});
-exports.metaServices = {
-    fetchDashboardMetadata,
+};
+const metaServices = {
+    fetchDashboardMetadata
 };

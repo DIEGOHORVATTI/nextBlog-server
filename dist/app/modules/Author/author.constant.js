@@ -1,5 +1,27 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.authorValidParams = exports.authorSearchableFields = void 0;
-exports.authorSearchableFields = ['name', 'email'];
-exports.authorValidParams = ['q', 'name', 'email'];
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: Object.getOwnPropertyDescriptor(all, name).get
+    });
+}
+_export(exports, {
+    get authorSearchableFields () {
+        return authorSearchableFields;
+    },
+    get authorValidParams () {
+        return authorValidParams;
+    }
+});
+const authorSearchableFields = [
+    'name',
+    'email'
+];
+const authorValidParams = [
+    'q',
+    'name',
+    'email'
+];

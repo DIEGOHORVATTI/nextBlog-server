@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "migrate": "npx prima migrate dev",
-    "build": "tsc",
+    "build": "bunx swc src -d dist --config-file .swcrc",
     "postinstall": "prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier --check '**/**/*.{js,jsx,ts,tsx,css}'",

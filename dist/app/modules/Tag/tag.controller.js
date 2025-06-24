@@ -1,41 +1,41 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TagControllers = void 0;
-const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
-const sendResponse_1 = require("../../../shared/sendResponse");
-const http_status_1 = __importDefault(require("http-status"));
-const tag_service_1 = require("./tag.service");
-const addTag = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield tag_service_1.TagServices.addTag(req.body);
-    (0, sendResponse_1.sendResponse)(res, {
-        statusCode: http_status_1.default.OK,
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "TagControllers", {
+    enumerable: true,
+    get: function() {
+        return TagControllers;
+    }
+});
+const _catchAsync = /*#__PURE__*/ _interop_require_default(require("../../../shared/catchAsync"));
+const _sendResponse = require("../../../shared/sendResponse");
+const _httpstatus = /*#__PURE__*/ _interop_require_default(require("http-status"));
+const _tagservice = require("./tag.service");
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+const addTag = (0, _catchAsync.default)(async (req, res)=>{
+    const result = await _tagservice.TagServices.addTag(req.body);
+    (0, _sendResponse.sendResponse)(res, {
+        statusCode: _httpstatus.default.OK,
         success: true,
         message: 'Tag created  successfully!',
-        data: result,
+        data: result
     });
-}));
-const getAllTags = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield tag_service_1.TagServices.getAllTags();
-    (0, sendResponse_1.sendResponse)(res, {
-        statusCode: http_status_1.default.OK,
+});
+const getAllTags = (0, _catchAsync.default)(async (req, res)=>{
+    const result = await _tagservice.TagServices.getAllTags();
+    (0, _sendResponse.sendResponse)(res, {
+        statusCode: _httpstatus.default.OK,
         success: true,
         message: 'Tag created  successfully!',
-        data: result,
+        data: result
     });
-}));
-exports.TagControllers = {
+});
+const TagControllers = {
     addTag,
-    getAllTags,
+    getAllTags
 };

@@ -51,7 +51,7 @@
     "dev": "bun run --watch src/index.ts",
     "start": "node dist/src/index.js",
     "build": "swc src -d dist --config-file .swcrc && cp package.json dist/package.json && cp -r src/public dist/src/public",
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate --schema=./prisma/schema.prisma",
     "email": "email dev --dir src/emails",
     "prisma:generate": "bun prisma generate",
     "lint:fix": "eslint --fix --ext .ts,.tsx .",

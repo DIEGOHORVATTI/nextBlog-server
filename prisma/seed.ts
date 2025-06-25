@@ -1,19 +1,24 @@
-import { hashPassword } from '@/lib/auth'
-import { UserRole, PrismaClient } from '@prisma/client'
+import { hashPassword } from '@/lib/auth';
+import { UserRole, PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 async function main() {
   const [adminPassword, userPassword] = await Promise.all([
     hashPassword('admin123'),
-    hashPassword('user123'),
-  ])
+    hashPassword('user123')
+  ]);
 
   const permissions = await prisma.$transaction([
     prisma.permission.upsert({
       where: { name: 'users:read' },
       update: {},
-      create: { name: 'users:read', description: 'Read users', resource: 'users', action: 'read' },
+      create: {
+        name: 'users:read',
+        description: 'Read users',
+        resource: 'users',
+        action: 'read'
+      }
     }),
     prisma.permission.upsert({
       where: { name: 'users:write' },
@@ -22,8 +27,8 @@ async function main() {
         name: 'users:write',
         description: 'Create/update users',
         resource: 'users',
-        action: 'write',
-      },
+        action: 'write'
+      }
     }),
     prisma.permission.upsert({
       where: { name: 'users:delete' },
@@ -32,8 +37,8 @@ async function main() {
         name: 'users:delete',
         description: 'Delete users',
         resource: 'users',
-        action: 'delete',
-      },
+        action: 'delete'
+      }
     }),
     prisma.permission.upsert({
       where: { name: 'categories:read' },
@@ -42,8 +47,8 @@ async function main() {
         name: 'categories:read',
         description: 'Read categories',
         resource: 'categories',
-        action: 'read',
-      },
+        action: 'read'
+      }
     }),
     prisma.permission.upsert({
       where: { name: 'categories:write' },
@@ -52,28 +57,40 @@ async function main() {
         name: 'categories:write',
         description: 'Create/update categories',
         resource: 'categories',
-        action: 'write',
-      },
-    }),
-  ])
+        action: 'write'
+      }
+    })
+  ]);
 
   const categories = await prisma.$transaction([
     prisma.category.upsert({
       where: { name: 'Development' },
       update: {},
-      create: { name: 'Development', description: 'Software dev', color: '#3B82F6' },
+      create: {
+        name: 'Development',
+        description: 'Software dev',
+        color: '#3B82F6'
+      }
     }),
     prisma.category.upsert({
       where: { name: 'Design' },
       update: {},
-      create: { name: 'Design', description: 'UI/UX and design', color: '#8B5CF6' },
+      create: {
+        name: 'Design',
+        description: 'UI/UX and design',
+        color: '#8B5CF6'
+      }
     }),
     prisma.category.upsert({
       where: { name: 'Marketing' },
       update: {},
-      create: { name: 'Marketing', description: 'Marketing content', color: '#10B981' },
-    }),
-  ])
+      create: {
+        name: 'Marketing',
+        description: 'Marketing content',
+        color: '#10B981'
+      }
+    })
+  ]);
 
   const [admin, user] = await prisma.$transaction([
     prisma.user.upsert({
@@ -83,8 +100,8 @@ async function main() {
         email: 'admin@example.com',
         name: 'System Admin',
         password: adminPassword,
-        role: UserRole.ADMIN,
-      },
+        role: UserRole.ADMIN
+      }
     }),
     prisma.user.upsert({
       where: { email: 'user@example.com' },
@@ -93,46 +110,46 @@ async function main() {
         email: 'user@example.com',
         name: 'Regular User',
         password: userPassword,
-        role: UserRole.USER,
-      },
-    }),
-  ])
+        role: UserRole.USER
+      }
+    })
+  ]);
 
   await Promise.all(
     permissions.map((permission) =>
       prisma.userPermission.upsert({
         where: {
-          userId_permissionId: { userId: admin.id, permissionId: permission.id },
+          userId_permissionId: { userId: admin.id, permissionId: permission.id }
         },
         update: {},
-        create: { userId: admin.id, permissionId: permission.id },
+        create: { userId: admin.id, permissionId: permission.id }
       })
     )
-  )
+  );
 
   await Promise.all([
     prisma.userCategory.upsert({
       where: {
-        userId_categoryId: { userId: admin.id, categoryId: categories[0].id },
+        userId_categoryId: { userId: admin.id, categoryId: categories[0].id }
       },
       update: {},
-      create: { userId: admin.id, categoryId: categories[0].id },
+      create: { userId: admin.id, categoryId: categories[0].id }
     }),
     prisma.userCategory.upsert({
       where: {
-        userId_categoryId: { userId: user.id, categoryId: categories[1].id },
+        userId_categoryId: { userId: user.id, categoryId: categories[1].id }
       },
       update: {},
-      create: { userId: user.id, categoryId: categories[1].id },
-    }),
-  ])
+      create: { userId: user.id, categoryId: categories[1].id }
+    })
+  ]);
 
-  console.log('✅ Seed ok')
+  console.log('✅ Seed ok');
 }
 
 main()
   .catch((err) => {
-    console.error('❌ Seed failed:', err)
-    process.exit(1)
+    console.error('❌ Seed failed:', err);
+    process.exit(1);
   })
-  .finally(() => prisma.$disconnect())
+  .finally(() => prisma.$disconnect());

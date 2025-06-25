@@ -47,9 +47,6 @@
     "swr": "^2.3.3",
     "zod": "^3.25.67"
   },
-  "prisma": {
-    "schema": "./src/prisma/schema.prisma"
-  },
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "start": "node dist/src/index.js",
